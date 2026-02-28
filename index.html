@@ -13,6 +13,7 @@ body {
   font-family: Arial, sans-serif;
   overflow: hidden;
   text-align: center;
+  transition: 1s ease;
 }
 
 canvas {
@@ -69,7 +70,7 @@ p {
 <h1>ENTER THE NEON VOID</h1>
 <p>Cyber Space. Infinite Motion. Digital Reality.</p>
 
-<a class="button" href="dimension.html">ENTER DIMENSION</a>
+<a class="button" href="dimension.html" onclick="enterPortal(event)">ENTER DIMENSION</a>
 
 <script>
 const canvas = document.getElementById("stars");
@@ -113,7 +114,17 @@ function animate() {
 }
 
 animate();
-</script>
+function enterPortal(event) {
+  event.preventDefault();
+
+  document.body.style.transition = "1s ease";
+  document.body.style.opacity = "0";
+  document.body.style.transform = "scale(1.1)";
+
+  setTimeout(() => {
+    window.location.href = "dimension.html";
+  }, 900);
+}</script>
 
 </body>
 </html>
