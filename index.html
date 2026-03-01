@@ -73,6 +73,30 @@ p {
   80% { transform: translate(3px, -2px); filter: hue-rotate(320deg); }
   100% { transform: translate(0); filter: hue-rotate(360deg); }
 }
+/* PORTAL BACKGROUND */
+
+.portal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 600px;
+  height: 600px;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: radial-gradient(circle,
+    rgba(0,247,255,0.8) 0%,
+    rgba(0,247,255,0.4) 15%,
+    rgba(0,247,255,0.2) 25%,
+    rgba(0,0,0,0.9) 60%);
+  filter: blur(40px);
+  animation: portalSpin 20s linear infinite;
+  z-index: -2;
+}
+
+@keyframes portalSpin {
+  from { transform: translate(-50%, -50%) rotate(0deg); }
+  to { transform: translate(-50%, -50%) rotate(360deg); }
+}  
 </style>
   <meta name="theme-color" content="#00f7ff">
 <meta name="description" content="Enter the Neon Void. Reality is optional.">
@@ -87,6 +111,7 @@ p {
 <body>
 
 <canvas id="stars"></canvas>
+  <div class="portal"></div>
 
 <h1>ENTER THE NEON VOID</h1>
 <p>Cyber Space. Infinite Motion. Digital Reality.</p>
