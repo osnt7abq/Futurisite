@@ -1,193 +1,469 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>NEON VOID</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>NEON VOID</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet"/>
+  <style>
 
-<style>
-body {
-  margin: 0;
-  background: black;
-  color: white;
-  font-family: Arial, sans-serif;
-  overflow: hidden;
-  text-align: center;
-  transition: 1s ease;
-}
+    /* ============================================
+       CSS VARIABLES — your color palette in one place
+       Change these to retheme the whole site!
+    ============================================ */
+    :root {
+      --cyan:    #00f5ff;
+      --magenta: #ff00cc;
+      --dark:    #020408;
+      --grid:    rgba(0, 245, 255, 0.07);
+      --glow-sm: 0 0 8px var(--cyan), 0 0 20px var(--cyan);
+      --glow-lg: 0 0 15px var(--cyan), 0 0 40px var(--cyan), 0 0 80px rgba(0,245,255,0.3);
+    }
 
-canvas {
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: -1;
-}
+    /* ============================================
+       RESET & BASE
+    ============================================ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-h1 {
-  margin-top: 35vh;
-  font-size: 3em;
-  color: #00f7ff;
-  text-shadow: 0 0 20px #00f7ff;
-  animation: fadeIn 2s ease forwards;
-  opacity: 0;
-}
+    body {
+      background: var(--dark);
+      color: #fff;
+      font-family: 'Share Tech Mono', monospace;
+      min-height: 100vh;
+      overflow-x: hidden;
+      cursor: crosshair; /* futuristic crosshair cursor */
+    }
 
-p {
-  color: #aaa;
-  margin-top: 20px;
-  font-size: 1.2em;
-  animation: fadeIn 3s ease forwards;
-  opacity: 0;
-}
+    /* ============================================
+       BACKGROUND — animated neon grid
+       This is what makes it feel like cyberspace!
+    ============================================ */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      /* Two gradients layered = a grid pattern */
+      background-image:
+        linear-gradient(var(--grid) 1px, transparent 1px),
+        linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+      background-size: 60px 60px;
+      /* Animate the grid moving downward — feels like flying through space */
+      animation: gridMove 8s linear infinite;
+    }
 
-.button {
-  margin-top: 40px;
-  padding: 15px 30px;
-  border: 2px solid #00f7ff;
-  color: #00f7ff;
-  text-decoration: none;
-  font-size: 1.1em;
-  transition: 0.4s;
-  display: inline-block;
-}
+    @keyframes gridMove {
+      0%   { background-position: 0 0; }
+      100% { background-position: 0 60px; }
+    }
 
-.button:hover {
-  background: #00f7ff;
-  color: black;
-  box-shadow: 0 0 25px #00f7ff;
-}
+    /* Radial dark vignette so edges feel deep */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      background: radial-gradient(ellipse at center, transparent 30%, var(--dark) 100%);
+      pointer-events: none;
+    }
 
-@keyframes fadeIn {
-  to { opacity: 1; }
-}/* Reality collapse glitch */
+    /* ============================================
+       SCANLINES — retro CRT screen effect
+       A subtle touch that screams "cyber"
+    ============================================ */
+    .scanlines {
+      position: fixed;
+      inset: 0;
+      z-index: 1;
+      background: repeating-linear-gradient(
+        to bottom,
+        transparent,
+        transparent 2px,
+        rgba(0,0,0,0.15) 2px,
+        rgba(0,0,0,0.15) 4px
+      );
+      pointer-events: none;
+      animation: scanFlicker 0.1s infinite;
+    }
 
-.glitching {
-  animation: glitch 0.4s steps(2, end) infinite;
-}
+    @keyframes scanFlicker {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0.97; }
+    }
 
-@keyframes glitch {
-  0% { transform: translate(0); filter: hue-rotate(0deg); }
-  20% { transform: translate(-4px, 3px) skewX(5deg); filter: hue-rotate(90deg); }
-  40% { transform: translate(4px, -3px) skewX(-5deg); filter: hue-rotate(180deg); }
-  60% { transform: translate(-3px, 2px); filter: hue-rotate(260deg); }
-  80% { transform: translate(3px, -2px); filter: hue-rotate(320deg); }
-  100% { transform: translate(0); filter: hue-rotate(360deg); }
-}
-/* PORTAL BACKGROUND */
+    /* ============================================
+       MAIN LAYOUT
+    ============================================ */
+    .container {
+      position: relative;
+      z-index: 10;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      text-align: center;
+    }
 
-.portal {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  width: 800px;
-  height: 800px;
-  transform: translate(-50%, -50%);
-  border-radius: 50%;
-  background: radial-gradient(circle,
-    rgba(0,247,255,0.8) 0%,
-    rgba(0,247,255,0.4) 15%,
-    rgba(0,247,255,0.2) 25%,
-    rgba(0,0,0,0.9) 60%);
-  filter: blur(60px) brightness(1.2);
-  animation: portalSpin 20s linear infinite;
-  z-index: -2;
-}
+    /* ============================================
+       TOP STATUS BAR — little HUD detail
+    ============================================ */
+    .hud-bar {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 20;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.6rem 2rem;
+      border-bottom: 1px solid rgba(0,245,255,0.15);
+      background: rgba(2,4,8,0.8);
+      backdrop-filter: blur(10px);
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      color: rgba(0,245,255,0.6);
+    }
 
-@keyframes portalSpin {
-  from { transform: translate(-50%, -50%) rotate(0deg); }
-  to { transform: translate(-50%, -50%) rotate(360deg); }
-}  
-</style>
-  <meta name="theme-color" content="#00f7ff">
-<meta name="description" content="Enter the Neon Void. Reality is optional.">
-<meta property="og:title" content="ENTER THE NEON VOID">
-<meta property="og:description" content="A portal beyond reality. Tap if you dare.">
-<meta property="og:type" content="website">
-<meta property="og:url" content="https://osnt7abq.github.io/Futurisite/">
-<meta property="og:image" content="https://osnt7abq.github.io/Futurisite/preview.svg">
- <link rel="icon" type="image/svg+xml" href="favicon.svg"> 
+    .hud-dot {
+      display: inline-block;
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--cyan);
+      box-shadow: var(--glow-sm);
+      margin-right: 0.5rem;
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50%       { opacity: 0.4; transform: scale(0.8); }
+    }
+
+    /* ============================================
+       CORNER BRACKETS — pure CSS decorative detail
+    ============================================ */
+    .bracket {
+      position: fixed;
+      width: 40px; height: 40px;
+      z-index: 20;
+    }
+    .bracket::before,
+    .bracket::after {
+      content: '';
+      position: absolute;
+      background: var(--cyan);
+      box-shadow: var(--glow-sm);
+    }
+    .bracket::before { width: 100%; height: 2px; }
+    .bracket::after  { width: 2px; height: 100%; }
+
+    .bracket-tl { top: 60px; left: 20px; }
+    .bracket-tr { top: 60px; right: 20px; transform: scaleX(-1); }
+    .bracket-bl { bottom: 20px; left: 20px; transform: scaleY(-1); }
+    .bracket-br { bottom: 20px; right: 20px; transform: scale(-1); }
+
+    /* ============================================
+       LOGO / SITE NAME
+    ============================================ */
+    .site-name {
+      font-family: 'Orbitron', sans-serif;
+      font-size: clamp(0.7rem, 2vw, 0.9rem);
+      font-weight: 400;
+      letter-spacing: 0.5em;
+      color: rgba(0,245,255,0.5);
+      text-transform: uppercase;
+      margin-bottom: 1.5rem;
+      /* fade in from top */
+      animation: fadeDown 1s ease both;
+    }
+
+    /* ============================================
+       MAIN TITLE — the hero headline
+    ============================================ */
+    .title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: clamp(3rem, 12vw, 9rem);
+      font-weight: 900;
+      line-height: 0.9;
+      letter-spacing: -0.02em;
+      text-transform: uppercase;
+      color: #fff;
+      /* The glow effect — layered text-shadow */
+      text-shadow:
+        0 0 10px var(--cyan),
+        0 0 30px var(--cyan),
+        0 0 60px rgba(0,245,255,0.5),
+        0 0 120px rgba(0,245,255,0.2);
+      animation: titleFlicker 6s ease-in-out infinite, fadeUp 1.2s ease both;
+    }
+
+    /* Subtle flicker — like a neon sign */
+    @keyframes titleFlicker {
+      0%, 90%, 100% { opacity: 1; }
+      92%            { opacity: 0.85; }
+      94%            { opacity: 1; }
+      96%            { opacity: 0.7; }
+      98%            { opacity: 1; }
+    }
+
+    .title-accent {
+      display: block;
+      color: transparent;
+      /* Gradient text — cyan to magenta */
+      -webkit-text-stroke: 2px var(--cyan);
+      text-shadow: none;
+      filter: drop-shadow(0 0 12px var(--cyan));
+    }
+
+    /* ============================================
+       SUBTITLE
+    ============================================ */
+    .subtitle {
+      margin-top: 1.5rem;
+      font-size: clamp(0.7rem, 2vw, 0.9rem);
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.5);
+      animation: fadeUp 1.4s ease both;
+    }
+
+    .subtitle span {
+      color: var(--cyan);
+      text-shadow: var(--glow-sm);
+    }
+
+    /* ============================================
+       DIVIDER LINE
+    ============================================ */
+    .divider {
+      width: 200px;
+      height: 1px;
+      margin: 2rem auto;
+      background: linear-gradient(90deg, transparent, var(--cyan), transparent);
+      box-shadow: 0 0 8px var(--cyan);
+      animation: fadeUp 1.5s ease both;
+    }
+
+    /* ============================================
+       CTA BUTTON — the main action
+    ============================================ */
+    .cta-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 1rem 2.5rem;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      text-decoration: none;
+      color: var(--cyan);
+      /* Outlined button style */
+      border: 1px solid var(--cyan);
+      box-shadow: 0 0 15px rgba(0,245,255,0.3), inset 0 0 15px rgba(0,245,255,0.05);
+      background: rgba(0,245,255,0.04);
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      animation: fadeUp 1.7s ease both;
+    }
+
+    /* Hover: fill with neon glow */
+    .cta-btn:hover {
+      background: rgba(0,245,255,0.12);
+      box-shadow: var(--glow-lg), inset 0 0 30px rgba(0,245,255,0.1);
+      color: #fff;
+      transform: translateY(-2px);
+    }
+
+    /* The sweep effect on hover */
+    .cta-btn::before {
+      content: '';
+      position: absolute;
+      top: 0; left: -100%;
+      width: 100%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(0,245,255,0.2), transparent);
+      transition: left 0.5s ease;
+    }
+    .cta-btn:hover::before { left: 100%; }
+
+    .cta-arrow {
+      font-size: 1rem;
+      transition: transform 0.3s ease;
+    }
+    .cta-btn:hover .cta-arrow { transform: translateX(4px); }
+
+    /* ============================================
+       STATS ROW — adds credibility/depth
+    ============================================ */
+    .stats {
+      display: flex;
+      gap: 3rem;
+      margin-top: 4rem;
+      animation: fadeUp 1.9s ease both;
+    }
+
+    .stat {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.3rem;
+    }
+
+    .stat-num {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--cyan);
+      text-shadow: var(--glow-sm);
+    }
+
+    .stat-label {
+      font-size: 0.6rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.4);
+    }
+
+    .stat-divider {
+      width: 1px;
+      background: rgba(0,245,255,0.2);
+      align-self: stretch;
+    }
+
+    /* ============================================
+       BOTTOM STATUS TEXT — terminal feel
+    ============================================ */
+    .terminal-line {
+      position: fixed;
+      bottom: 1.5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 20;
+      font-size: 0.6rem;
+      letter-spacing: 0.15em;
+      color: rgba(0,245,255,0.35);
+      white-space: nowrap;
+    }
+
+    /* Blinking cursor */
+    .cursor {
+      display: inline-block;
+      width: 8px; height: 12px;
+      background: var(--cyan);
+      box-shadow: var(--glow-sm);
+      margin-left: 4px;
+      vertical-align: middle;
+      animation: blink 1s step-end infinite;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0; }
+    }
+
+    /* ============================================
+       ENTRANCE ANIMATIONS
+    ============================================ */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeDown {
+      from { opacity: 0; transform: translateY(-20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ============================================
+       RESPONSIVE — mobile adjustments
+    ============================================ */
+    @media (max-width: 600px) {
+      .stats { gap: 1.5rem; }
+      .hud-bar .hud-right { display: none; }
+      .bracket { display: none; }
+    }
+
+  </style>
 </head>
-
 <body>
 
-<canvas id="stars"></canvas>
-  <div class="portal"></div>
+  <!-- Scanline overlay -->
+  <div class="scanlines"></div>
 
-<h1>ENTER THE NEON VOID</h1>
-<p>Cyber Space. Infinite Motion. Digital Reality.</p>
+  <!-- Corner brackets (pure CSS decoration) -->
+  <div class="bracket bracket-tl"></div>
+  <div class="bracket bracket-tr"></div>
+  <div class="bracket bracket-bl"></div>
+  <div class="bracket bracket-br"></div>
 
-<a class="button" href="dimension.html" onclick="enterPortal(event)">ENTER DIMENSION</a>
+  <!-- HUD top bar -->
+  <div class="hud-bar">
+    <div><span class="hud-dot"></span>SYS.ONLINE // SECTOR 7</div>
+    <div class="hud-right">NEON VOID v2.0 // INITIALIZED</div>
+    <div id="clock">--:--:--</div>
+  </div>
 
-<script>
-const canvas = document.getElementById("stars");
-const ctx = canvas.getContext("2d");
+  <!-- Main content -->
+  <div class="container">
 
-function resizeCanvas() {
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
-}
-resizeCanvas();
-window.addEventListener("resize", resizeCanvas);
+    <div class="site-name">// Cyber Space Interface //</div>
 
-let stars = [];
-for (let i = 0; i < 200; i++) {
-  stars.push({
-    x: Math.random() * canvas.width,
-    y: Math.random() * canvas.height,
-    radius: Math.random() * 2,
-    speed: Math.random() * 0.7
-  });
-}
+    <h1 class="title">
+      Neon
+      <span class="title-accent">Void</span>
+    </h1>
 
-function animate() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  ctx.fillStyle = "#00f7ff";
+    <p class="subtitle">
+      <span>Cyber Space.</span> &nbsp;Infinite Motion.&nbsp; <span>Digital Reality.</span>
+    </p>
 
-  stars.forEach(star => {
-    ctx.beginPath();
-    ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
-    ctx.fill();
+    <div class="divider"></div>
 
-    star.y += star.speed;
+    <a href="dimension.html" class="cta-btn">
+      Enter Dimension
+      <span class="cta-arrow">→</span>
+    </a>
 
-    if (star.y > canvas.height) {
-      star.y = 0;
-      star.x = Math.random() * canvas.width;
+    <div class="stats">
+      <div class="stat">
+        <span class="stat-num">∞</span>
+        <span class="stat-label">Dimensions</span>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat">
+        <span class="stat-num">404</span>
+        <span class="stat-label">Realities</span>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat">
+        <span class="stat-num">0%</span>
+        <span class="stat-label">Limits</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Bottom terminal line -->
+  <div class="terminal-line">
+    AWAITING INPUT<span class="cursor"></span>
+  </div>
+
+  <script>
+    // Live clock in the HUD bar — just a few lines of JS!
+    function updateClock() {
+      const now = new Date();
+      const h = String(now.getHours()).padStart(2,'0');
+      const m = String(now.getMinutes()).padStart(2,'0');
+      const s = String(now.getSeconds()).padStart(2,'0');
+      document.getElementById('clock').textContent = `${h}:${m}:${s}`;
     }
-  });
+    updateClock();
+    setInterval(updateClock, 1000);
+  </script>
 
-  requestAnimationFrame(animate);
-}
-
-animate();
-function enterPortal(event) {
-  event.preventDefault();
-
-  const flash = document.getElementById("flash");
-  const title = document.querySelector("h1");
-  const paragraph = document.querySelector("p");
-  const button = document.querySelector(".button");
-
-  // Start glitch
-  title.classList.add("glitching");
-  paragraph.classList.add("glitching");
-  button.classList.add("glitching");
-
-  // Flash
-  flash.style.opacity = "1";
-
-  // Collapse effect
-  setTimeout(() => {
-    document.body.style.transition = "0.8s ease";
-document.body.style.transform = "scale(1.4) rotate(2deg)";
-document.body.style.filter = "blur(8px) brightness(2) contrast(2)";
-
-  // Teleport
-  setTimeout(() => {
-    window.location.href = "dimension.html";
-  }, 900);
-}
-}
-</script>
 </body>
 </html>
