@@ -1,469 +1,136 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>NEON VOID</title>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet"/>
-  <style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Winter Edition '26 | The Future of Commerce</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #050505;
+            color: #ffffff;
+            overflow-x: hidden;
+        }
 
-    /* ============================================
-       CSS VARIABLES — your color palette in one place
-       Change these to retheme the whole site!
-    ============================================ */
-    :root {
-      --cyan:    #00f5ff;
-      --magenta: #ff00cc;
-      --dark:    #020408;
-      --grid:    rgba(0, 245, 255, 0.07);
-      --glow-sm: 0 0 8px var(--cyan), 0 0 20px var(--cyan);
-      --glow-lg: 0 0 15px var(--cyan), 0 0 40px var(--cyan), 0 0 80px rgba(0,245,255,0.3);
-    }
+        .glass {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+        }
 
-    /* ============================================
-       RESET & BASE
-    ============================================ */
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        .glow-text {
+            background: linear-gradient(135deg, #fff 0%, #888 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
 
-    body {
-      background: var(--dark);
-      color: #fff;
-      font-family: 'Share Tech Mono', monospace;
-      min-height: 100vh;
-      overflow-x: hidden;
-      cursor: crosshair; /* futuristic crosshair cursor */
-    }
+        .bento-card {
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
 
-    /* ============================================
-       BACKGROUND — animated neon grid
-       This is what makes it feel like cyberspace!
-    ============================================ */
-    body::before {
-      content: '';
-      position: fixed;
-      inset: 0;
-      z-index: 0;
-      /* Two gradients layered = a grid pattern */
-      background-image:
-        linear-gradient(var(--grid) 1px, transparent 1px),
-        linear-gradient(90deg, var(--grid) 1px, transparent 1px);
-      background-size: 60px 60px;
-      /* Animate the grid moving downward — feels like flying through space */
-      animation: gridMove 8s linear infinite;
-    }
+        .bento-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.06);
+        }
 
-    @keyframes gridMove {
-      0%   { background-position: 0 0; }
-      100% { background-position: 0 60px; }
-    }
-
-    /* Radial dark vignette so edges feel deep */
-    body::after {
-      content: '';
-      position: fixed;
-      inset: 0;
-      z-index: 0;
-      background: radial-gradient(ellipse at center, transparent 30%, var(--dark) 100%);
-      pointer-events: none;
-    }
-
-    /* ============================================
-       SCANLINES — retro CRT screen effect
-       A subtle touch that screams "cyber"
-    ============================================ */
-    .scanlines {
-      position: fixed;
-      inset: 0;
-      z-index: 1;
-      background: repeating-linear-gradient(
-        to bottom,
-        transparent,
-        transparent 2px,
-        rgba(0,0,0,0.15) 2px,
-        rgba(0,0,0,0.15) 4px
-      );
-      pointer-events: none;
-      animation: scanFlicker 0.1s infinite;
-    }
-
-    @keyframes scanFlicker {
-      0%, 100% { opacity: 1; }
-      50%       { opacity: 0.97; }
-    }
-
-    /* ============================================
-       MAIN LAYOUT
-    ============================================ */
-    .container {
-      position: relative;
-      z-index: 10;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 2rem;
-      text-align: center;
-    }
-
-    /* ============================================
-       TOP STATUS BAR — little HUD detail
-    ============================================ */
-    .hud-bar {
-      position: fixed;
-      top: 0; left: 0; right: 0;
-      z-index: 20;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 0.6rem 2rem;
-      border-bottom: 1px solid rgba(0,245,255,0.15);
-      background: rgba(2,4,8,0.8);
-      backdrop-filter: blur(10px);
-      font-size: 0.65rem;
-      letter-spacing: 0.15em;
-      color: rgba(0,245,255,0.6);
-    }
-
-    .hud-dot {
-      display: inline-block;
-      width: 6px; height: 6px;
-      border-radius: 50%;
-      background: var(--cyan);
-      box-shadow: var(--glow-sm);
-      margin-right: 0.5rem;
-      animation: pulse 2s ease-in-out infinite;
-    }
-
-    @keyframes pulse {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50%       { opacity: 0.4; transform: scale(0.8); }
-    }
-
-    /* ============================================
-       CORNER BRACKETS — pure CSS decorative detail
-    ============================================ */
-    .bracket {
-      position: fixed;
-      width: 40px; height: 40px;
-      z-index: 20;
-    }
-    .bracket::before,
-    .bracket::after {
-      content: '';
-      position: absolute;
-      background: var(--cyan);
-      box-shadow: var(--glow-sm);
-    }
-    .bracket::before { width: 100%; height: 2px; }
-    .bracket::after  { width: 2px; height: 100%; }
-
-    .bracket-tl { top: 60px; left: 20px; }
-    .bracket-tr { top: 60px; right: 20px; transform: scaleX(-1); }
-    .bracket-bl { bottom: 20px; left: 20px; transform: scaleY(-1); }
-    .bracket-br { bottom: 20px; right: 20px; transform: scale(-1); }
-
-    /* ============================================
-       LOGO / SITE NAME
-    ============================================ */
-    .site-name {
-      font-family: 'Orbitron', sans-serif;
-      font-size: clamp(0.7rem, 2vw, 0.9rem);
-      font-weight: 400;
-      letter-spacing: 0.5em;
-      color: rgba(0,245,255,0.5);
-      text-transform: uppercase;
-      margin-bottom: 1.5rem;
-      /* fade in from top */
-      animation: fadeDown 1s ease both;
-    }
-
-    /* ============================================
-       MAIN TITLE — the hero headline
-    ============================================ */
-    .title {
-      font-family: 'Orbitron', sans-serif;
-      font-size: clamp(3rem, 12vw, 9rem);
-      font-weight: 900;
-      line-height: 0.9;
-      letter-spacing: -0.02em;
-      text-transform: uppercase;
-      color: #fff;
-      /* The glow effect — layered text-shadow */
-      text-shadow:
-        0 0 10px var(--cyan),
-        0 0 30px var(--cyan),
-        0 0 60px rgba(0,245,255,0.5),
-        0 0 120px rgba(0,245,255,0.2);
-      animation: titleFlicker 6s ease-in-out infinite, fadeUp 1.2s ease both;
-    }
-
-    /* Subtle flicker — like a neon sign */
-    @keyframes titleFlicker {
-      0%, 90%, 100% { opacity: 1; }
-      92%            { opacity: 0.85; }
-      94%            { opacity: 1; }
-      96%            { opacity: 0.7; }
-      98%            { opacity: 1; }
-    }
-
-    .title-accent {
-      display: block;
-      color: transparent;
-      /* Gradient text — cyan to magenta */
-      -webkit-text-stroke: 2px var(--cyan);
-      text-shadow: none;
-      filter: drop-shadow(0 0 12px var(--cyan));
-    }
-
-    /* ============================================
-       SUBTITLE
-    ============================================ */
-    .subtitle {
-      margin-top: 1.5rem;
-      font-size: clamp(0.7rem, 2vw, 0.9rem);
-      letter-spacing: 0.3em;
-      text-transform: uppercase;
-      color: rgba(255,255,255,0.5);
-      animation: fadeUp 1.4s ease both;
-    }
-
-    .subtitle span {
-      color: var(--cyan);
-      text-shadow: var(--glow-sm);
-    }
-
-    /* ============================================
-       DIVIDER LINE
-    ============================================ */
-    .divider {
-      width: 200px;
-      height: 1px;
-      margin: 2rem auto;
-      background: linear-gradient(90deg, transparent, var(--cyan), transparent);
-      box-shadow: 0 0 8px var(--cyan);
-      animation: fadeUp 1.5s ease both;
-    }
-
-    /* ============================================
-       CTA BUTTON — the main action
-    ============================================ */
-    .cta-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.75rem;
-      padding: 1rem 2.5rem;
-      font-family: 'Orbitron', sans-serif;
-      font-size: 0.8rem;
-      font-weight: 700;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      text-decoration: none;
-      color: var(--cyan);
-      /* Outlined button style */
-      border: 1px solid var(--cyan);
-      box-shadow: 0 0 15px rgba(0,245,255,0.3), inset 0 0 15px rgba(0,245,255,0.05);
-      background: rgba(0,245,255,0.04);
-      position: relative;
-      overflow: hidden;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      animation: fadeUp 1.7s ease both;
-    }
-
-    /* Hover: fill with neon glow */
-    .cta-btn:hover {
-      background: rgba(0,245,255,0.12);
-      box-shadow: var(--glow-lg), inset 0 0 30px rgba(0,245,255,0.1);
-      color: #fff;
-      transform: translateY(-2px);
-    }
-
-    /* The sweep effect on hover */
-    .cta-btn::before {
-      content: '';
-      position: absolute;
-      top: 0; left: -100%;
-      width: 100%; height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(0,245,255,0.2), transparent);
-      transition: left 0.5s ease;
-    }
-    .cta-btn:hover::before { left: 100%; }
-
-    .cta-arrow {
-      font-size: 1rem;
-      transition: transform 0.3s ease;
-    }
-    .cta-btn:hover .cta-arrow { transform: translateX(4px); }
-
-    /* ============================================
-       STATS ROW — adds credibility/depth
-    ============================================ */
-    .stats {
-      display: flex;
-      gap: 3rem;
-      margin-top: 4rem;
-      animation: fadeUp 1.9s ease both;
-    }
-
-    .stat {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 0.3rem;
-    }
-
-    .stat-num {
-      font-family: 'Orbitron', sans-serif;
-      font-size: 1.5rem;
-      font-weight: 700;
-      color: var(--cyan);
-      text-shadow: var(--glow-sm);
-    }
-
-    .stat-label {
-      font-size: 0.6rem;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: rgba(255,255,255,0.4);
-    }
-
-    .stat-divider {
-      width: 1px;
-      background: rgba(0,245,255,0.2);
-      align-self: stretch;
-    }
-
-    /* ============================================
-       BOTTOM STATUS TEXT — terminal feel
-    ============================================ */
-    .terminal-line {
-      position: fixed;
-      bottom: 1.5rem;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 20;
-      font-size: 0.6rem;
-      letter-spacing: 0.15em;
-      color: rgba(0,245,255,0.35);
-      white-space: nowrap;
-    }
-
-    /* Blinking cursor */
-    .cursor {
-      display: inline-block;
-      width: 8px; height: 12px;
-      background: var(--cyan);
-      box-shadow: var(--glow-sm);
-      margin-left: 4px;
-      vertical-align: middle;
-      animation: blink 1s step-end infinite;
-    }
-
-    @keyframes blink {
-      0%, 100% { opacity: 1; }
-      50%       { opacity: 0; }
-    }
-
-    /* ============================================
-       ENTRANCE ANIMATIONS
-    ============================================ */
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(20px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-
-    @keyframes fadeDown {
-      from { opacity: 0; transform: translateY(-20px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-
-    /* ============================================
-       RESPONSIVE — mobile adjustments
-    ============================================ */
-    @media (max-width: 600px) {
-      .stats { gap: 1.5rem; }
-      .hud-bar .hud-right { display: none; }
-      .bracket { display: none; }
-    }
-
-  </style>
+        .gradient-sphere {
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(99, 102, 241, 0.15) 0%, rgba(0, 0, 0, 0) 70%);
+            z-index: -1;
+        }
+    </style>
 </head>
 <body>
 
-  <!-- Scanline overlay -->
-  <div class="scanlines"></div>
+    <!-- Subtle Background Elements -->
+    <div class="gradient-sphere top-0 left-[-100px]"></div>
+    <div class="gradient-sphere bottom-0 right-[-100px]"></div>
 
-  <!-- Corner brackets (pure CSS decoration) -->
-  <div class="bracket bracket-tl"></div>
-  <div class="bracket bracket-tr"></div>
-  <div class="bracket bracket-bl"></div>
-  <div class="bracket bracket-br"></div>
+    <!-- Navigation -->
+    <nav class="fixed top-6 left-1/2 -translate-x-1/2 z-50 w-[90%] max-w-5xl">
+        <div class="glass px-8 py-4 flex justify-between items-center">
+            <div class="text-xl font-extrabold tracking-tighter">WINTER '26</div>
+            <div class="hidden md:flex space-x-8 text-sm font-medium text-gray-400">
+                <a href="#" class="hover:text-white transition">Features</a>
+                <a href="#" class="hover:text-white transition">Intelligence</a>
+                <a href="#" class="hover:text-white transition">Logistics</a>
+            </div>
+            <button class="bg-white text-black px-5 py-2 rounded-full text-sm font-bold hover:bg-gray-200 transition">
+                Start Building
+            </button>
+        </div>
+    </nav>
 
-  <!-- HUD top bar -->
-  <div class="hud-bar">
-    <div><span class="hud-dot"></span>SYS.ONLINE // SECTOR 7</div>
-    <div class="hud-right">NEON VOID v2.0 // INITIALIZED</div>
-    <div id="clock">--:--:--</div>
-  </div>
+    <!-- Hero Section -->
+    <header class="pt-40 pb-20 px-6 text-center">
+        <div class="inline-block px-4 py-1.5 mb-6 glass text-xs font-semibold tracking-widest uppercase text-indigo-400">
+            Available Now: The Agentic Era
+        </div>
+        <h1 class="text-6xl md:text-8xl font-extrabold tracking-tight glow-text mb-8">
+            Built for <br> Autonomous Scale.
+        </h1>
+        <p class="max-w-2xl mx-auto text-gray-400 text-lg md:text-xl leading-relaxed mb-10">
+            Winter Edition '26 introduces 100+ updates designed for the world of AI-native commerce. Let your store run itself.
+        </p>
+        <div class="flex flex-col md:flex-row justify-center gap-4">
+            <button class="bg-indigo-600 px-8 py-4 rounded-2xl font-bold text-lg hover:bg-indigo-500 shadow-lg shadow-indigo-500/20 transition">Explore the Edition</button>
+            <button class="glass px-8 py-4 rounded-2xl font-bold text-lg hover:bg-white/10 transition">Watch the Film</button>
+        </div>
+    </header>
 
-  <!-- Main content -->
-  <div class="container">
+    <!-- Bento Grid Section -->
+    <section class="max-w-7xl mx-auto px-6 py-20">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            
+            <!-- Large Card -->
+            <div class="md:col-span-2 glass bento-card p-10 flex flex-col justify-end min-h-[400px] bg-gradient-to-br from-white/5 to-transparent">
+                <i class="fa-solid fa-microchip text-indigo-500 text-4xl mb-6"></i>
+                <h3 class="text-3xl font-bold mb-4">AI Staff Agents</h3>
+                <p class="text-gray-400 text-lg">Deploy autonomous agents that handle support, inventory, and marketing updates while you sleep.</p>
+            </div>
 
-    <div class="site-name">// Cyber Space Interface //</div>
+            <!-- Small Card -->
+            <div class="glass bento-card p-10 flex flex-col justify-center text-center">
+                <div class="text-5xl font-extrabold text-white mb-2">99.9%</div>
+                <p class="text-indigo-400 font-bold uppercase tracking-widest text-xs">Uptime Guaranteed</p>
+                <p class="text-gray-500 mt-4 text-sm">Global edge infrastructure for 2026 speeds.</p>
+            </div>
 
-    <h1 class="title">
-      Neon
-      <span class="title-accent">Void</span>
-    </h1>
+            <!-- Card 3 -->
+            <div class="glass bento-card p-10">
+                <i class="fa-solid fa-wand-magic-sparkles text-purple-500 text-2xl mb-4"></i>
+                <h3 class="text-xl font-bold mb-2">Predictive UX</h3>
+                <p class="text-gray-400 text-sm">Your storefront morphs in real-time based on buyer behavior patterns.</p>
+            </div>
 
-    <p class="subtitle">
-      <span>Cyber Space.</span> &nbsp;Infinite Motion.&nbsp; <span>Digital Reality.</span>
-    </p>
+            <!-- Card 4 -->
+            <div class="md:col-span-2 glass bento-card p-10 flex items-center justify-between overflow-hidden">
+                <div class="max-w-md">
+                    <h3 class="text-xl font-bold mb-2">One-Tap Global Logistics</h3>
+                    <p class="text-gray-400 text-sm">Automated customs and drone-delivery integration ready for 50+ countries.</p>
+                </div>
+                <i class="fa-solid fa-globe text-8xl opacity-10 -mr-10"></i>
+            </div>
 
-    <div class="divider"></div>
+        </div>
+    </section>
 
-    <a href="dimension.html" class="cta-btn">
-      Enter Dimension
-      <span class="cta-arrow">→</span>
-    </a>
-
-    <div class="stats">
-      <div class="stat">
-        <span class="stat-num">∞</span>
-        <span class="stat-label">Dimensions</span>
-      </div>
-      <div class="stat-divider"></div>
-      <div class="stat">
-        <span class="stat-num">404</span>
-        <span class="stat-label">Realities</span>
-      </div>
-      <div class="stat-divider"></div>
-      <div class="stat">
-        <span class="stat-num">0%</span>
-        <span class="stat-label">Limits</span>
-      </div>
-    </div>
-
-  </div>
-
-  <!-- Bottom terminal line -->
-  <div class="terminal-line">
-    AWAITING INPUT<span class="cursor"></span>
-  </div>
-
-  <script>
-    // Live clock in the HUD bar — just a few lines of JS!
-    function updateClock() {
-      const now = new Date();
-      const h = String(now.getHours()).padStart(2,'0');
-      const m = String(now.getMinutes()).padStart(2,'0');
-      const s = String(now.getSeconds()).padStart(2,'0');
-      document.getElementById('clock').textContent = `${h}:${m}:${s}`;
-    }
-    updateClock();
-    setInterval(updateClock, 1000);
-  </script>
+    <!-- CTA Footer -->
+    <footer class="py-30 pb-20 text-center border-t border-white/10">
+        <h2 class="text-4xl font-bold mb-8 mt-20">Ready to evolve?</h2>
+        <button class="bg-white text-black px-10 py-5 rounded-2xl font-black text-xl hover:scale-105 transition transform">
+            Get Started for $1
+        </button>
+        <p class="mt-10 text-gray-600 text-sm">© 2026 YourBrand. Powered by AI Intelligence.</p>
+    </footer>
 
 </body>
 </html>
