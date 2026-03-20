@@ -3,146 +3,116 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dev_Environment // 2026</title>
+    <title>Winter Edition '26 | The Future of Commerce</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;700&family=JetBrains+Mono:wght@400;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap');
         
         body {
+            font-family: 'Inter', sans-serif;
             background-color: #050505;
-            color: #00ff41; /* Classic Matrix/Hacker Green */
-            font-family: 'Space Grotesk', sans-serif;
+            color: #ffffff;
             overflow-x: hidden;
         }
 
-        .mono { font-family: 'JetBrains Mono', monospace; }
-
-        /* The Grid Background */
-        .grid-bg {
-            background-image: linear-gradient(rgba(0, 255, 65, 0.05) 1px, transparent 1px),
-                              linear-gradient(90deg, rgba(0, 255, 65, 0.05) 1px, transparent 1px);
-            background-size: 30px 30px;
+        .glass {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
         }
 
-        /* Neon Glow Effect */
-        .cyber-card {
-            background: rgba(0, 0, 0, 0.8);
-            border: 1px solid #00ff41;
-            box-shadow: 0 0 15px rgba(0, 255, 65, 0.2);
-            transition: all 0.3s ease;
+        .glow-text {
+            background: linear-gradient(135deg, #fff 0%, #888 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
-        .cyber-card:hover {
-            box-shadow: 0 0 30px rgba(0, 255, 65, 0.5);
+        .bento-card {
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .bento-card:hover {
             transform: translateY(-5px);
+            border-color: rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.06);
         }
 
-        .glitch {
-            text-shadow: 2px 0 #ff00ff, -2px 0 #00ffff;
-            animation: glitch-anim 2s infinite linear alternate-reverse;
+        .gradient-sphere {
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(99, 102, 241, 0.15) 0%, rgba(0, 0, 0, 0) 70%);
+            z-index: -1;
         }
-
-        @keyframes glitch-anim {
-            0% { text-shadow: 2px 0 #ff00ff; }
-            50% { text-shadow: -2px 0 #00ffff; }
-            100% { text-shadow: 2px 0 #ff00ff; }
-        }
-
-        .typing {
-            overflow: hidden;
-            white-space: nowrap;
-            border-right: 3px solid #00ff41;
-            animation: typing 3.5s steps(40, end), blink-caret .75s step-end infinite;
-        }
-
-        @keyframes typing { from { width: 0 } to { width: 100% } }
-        @keyframes blink-caret { from, to { border-color: transparent } 50% { border-color: #00ff41 } }
     </style>
 </head>
-<body class="grid-bg">
+<body>
 
-    <!-- Top Status Bar -->
-    <nav class="fixed top-0 w-full z-50 bg-black/80 backdrop-blur-md border-b border-[#00ff41]/30 p-4 flex justify-between items-center">
-        <div class="flex items-center space-x-4">
-            <div class="w-3 h-3 bg-red-500 rounded-full"></div>
-            <div class="w-3 h-3 bg-yellow-500 rounded-full"></div>
-            <div class="w-3 h-3 bg-green-500 rounded-full"></div>
-            <span class="mono text-xs opacity-70">SYSTEM_OS // V.2.0.26</span>
+    <!-- Background Decoration -->
+    <div class="gradient-sphere top-0 left-[-100px]"></div>
+    <div class="gradient-sphere bottom-0 right-[-100px]"></div>
+
+    <!-- Navigation -->
+    <nav class="fixed top-6 left-1/2 -translate-x-1/2 z-50 w-[90%] max-w-5xl">
+        <div class="glass px-8 py-4 flex justify-between items-center">
+            <div class="text-xl font-extrabold tracking-tighter uppercase italic">Winter '26</div>
+            <div class="hidden md:flex space-x-8 text-sm font-medium text-gray-400">
+                <a href="#" class="hover:text-white transition">Features</a>
+                <a href="#" class="hover:text-white transition">Intelligence</a>
+                <a href="#" class="hover:text-white transition">Logistics</a>
+            </div>
+            <button class="bg-white text-black px-5 py-2 rounded-full text-sm font-bold hover:bg-gray-200 transition">
+                Get Started
+            </button>
         </div>
-        <div id="clock" class="mono text-sm font-bold tracking-tighter">00:00:00</div>
     </nav>
 
     <!-- Hero Section -->
-    <header class="pt-32 pb-20 px-6 max-w-5xl mx-auto">
-        <div class="cyber-card p-8 rounded-lg mb-12">
-            <p class="mono text-xs mb-2 text-[#00ff41]/60">> EXECUTE: INITIALIZE_BIO</p>
-            <h1 class="text-5xl md:text-7xl font-bold glitch uppercase mb-4">Master_Dev</h1>
-            <div class="typing inline-block">
-                <p class="text-xl md:text-2xl opacity-80">Full-Stack AI Agent Architect_</p>
-            </div>
+    <header class="pt-40 pb-20 px-6 text-center">
+        <div class="inline-block px-4 py-1.5 mb-6 glass text-xs font-semibold tracking-widest uppercase text-indigo-400">
+            Available Now: The Agentic Era
         </div>
-
-        <!-- Dashboard Grid -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            
-            <!-- Skills Terminal -->
-            <div class="cyber-card p-6 md:col-span-2">
-                <h3 class="mono text-sm border-b border-[#00ff41]/30 pb-2 mb-4">TERMINAL_SKILLS</h3>
-                <div class="grid grid-cols-2 gap-4 mono text-sm">
-                    <div>[✓] NEURAL_NETS</div>
-                    <div>[✓] REACT_CORE</div>
-                    <div>[✓] AUTOMATION_AGENTS</div>
-                    <div>[✓] QUANTUM_CSS</div>
-                    <div>[✓] PYTHON_BLADE</div>
-                    <div>[✓] GITHUB_FLOW</div>
-                </div>
-            </div>
-
-            <!-- Profile Image (Renaissance Placeholder) -->
-            <div class="cyber-card overflow-hidden group">
-                <img src="1.jpg" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition duration-500 opacity-50 group-hover:opacity-100">
-                <div class="absolute inset-0 bg-green-500/10 pointer-events-none"></div>
-            </div>
-
-            <!-- Project 1 -->
-            <div class="cyber-card p-6 flex flex-col justify-between h-64">
-                <span class="text-[10px] opacity-50 uppercase tracking-widest">Project_01</span>
-                <h4 class="text-2xl font-bold">CYBER_LOGISTICS</h4>
-                <p class="text-xs opacity-70">Autonomous drone-delivery logic for Web 4.0</p>
-                <button class="mt-4 border border-[#00ff41] px-4 py-2 text-xs hover:bg-[#00ff41] hover:text-black transition uppercase">View_Source</button>
-            </div>
-
-            <!-- Project 2 (Statue Pic) -->
-            <div class="cyber-card relative h-64 overflow-hidden group">
-                <img src="statue.jpg" class="absolute inset-0 w-full h-full object-cover opacity-30 group-hover:opacity-100 transition duration-700">
-                <div class="relative p-6 z-10">
-                    <h4 class="text-2xl font-bold uppercase">Anatomy_UI</h4>
-                </div>
-            </div>
-
-            <!-- Live Status -->
-            <div class="cyber-card p-6 flex flex-col justify-center items-center text-center">
-                <div class="text-4xl font-bold mb-2 tracking-tighter">99%</div>
-                <div class="text-[10px] opacity-50 uppercase tracking-widest">Efficiency_Rating</div>
-            </div>
-
+        <h1 class="text-6xl md:text-8xl font-extrabold tracking-tight glow-text mb-8">
+            Built for <br> Autonomous Scale.
+        </h1>
+        <p class="max-w-2xl mx-auto text-gray-400 text-lg md:text-xl leading-relaxed mb-10">
+            Winter Edition '26 introduces 100+ updates designed for the world of AI-native commerce. Let your store run itself.
+        </p>
+        <div class="flex flex-col md:flex-row justify-center gap-4">
+            <button class="bg-indigo-600 px-8 py-4 rounded-2xl font-bold text-lg hover:bg-indigo-500 shadow-lg shadow-indigo-500/20 transition">Explore the Edition</button>
+            <button class="glass px-8 py-4 rounded-2xl font-bold text-lg hover:bg-white/10 transition">Watch the Film</button>
         </div>
     </header>
 
-    <!-- Interactive Footer -->
-    <footer class="p-10 text-center border-t border-[#00ff41]/20 mono text-[10px] opacity-50">
-        <p>> ROOT@MASTER_DEV:~$ SHUTDOWN -R NOW</p>
-        <p class="mt-2">© 2026 CYBER_PORTFOLIO_OS</p>
-    </footer>
+    <!-- Bento Grid Section -->
+    <section class="max-w-7xl mx-auto px-6 py-20">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            
+            <!-- Large Card -->
+            <div class="md:col-span-2 glass bento-card p-10 flex flex-col justify-end min-h-[400px] bg-gradient-to-br from-white/5 to-transparent">
+                <i class="fa-solid fa-microchip text-indigo-500 text-4xl mb-6"></i>
+                <h3 class="text-3xl font-bold mb-4 uppercase">AI Staff Agents</h3>
+                <p class="text-gray-400 text-lg">Deploy autonomous agents that handle support, inventory, and marketing updates while you sleep.</p>
+            </div>
 
-    <script>
-        // Real-time Clock Script
-        function updateClock() {
-            const now = new Date();
-            document.getElementById('clock').textContent = now.toLocaleTimeString('en-US', { hour12: false });
-        }
-        setInterval(updateClock, 1000);
-        updateClock();
-    </script>
-</body>
-</html>
+            <!-- Small Card 1 -->
+            <div class="glass bento-card p-10 flex flex-col justify-center text-center">
+                <div class="text-5xl font-extrabold text-white mb-2 italic">99.9%</div>
+                <p class="text-indigo-400 font-bold uppercase tracking-widest text-xs">Uptime Guaranteed</p>
+                <p class="text-gray-500 mt-4 text-sm leading-relaxed">Global edge infrastructure for 2026 speeds.</p>
+            </div>
+
+            <!-- Small Card 2 -->
+            <div class="glass bento-card p-10">
+                <i class="fa-solid fa-wand-magic-sparkles text-purple-500 text-2xl mb-4"></i>
+                <h3 class="text-xl font-bold mb-2 uppercase">Predictive UX</h3>
+                <p class="text-gray-400 text-sm leading-relaxed">Your storefront morphs in real-time based on buyer behavior patterns.</p>
+            </div>
+
+            <!-- Large Logistics Card -->
+            <div class="md:col-span-2 glass bento-card p-10 flex items-center justify-between overflow-hidden">
+                <div class="max-w-md">
+                    <h3 class="text-xl font-bold mb-2 uppercase tracking-tighter">Global Logistics</h3>
+                    <p
