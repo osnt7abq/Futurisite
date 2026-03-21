@@ -1,172 +1,21 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CodeMaster // Learn & Build</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&family=JetBrains+Mono&display=swap');
-        
-        body {
-            background-color: #020202;
-            color: #ffffff;
-            font-family: 'Plus Jakarta Sans', sans-serif;
-        }
+Yes! The AI assistant is inside the IDE. You're currently seeing the **landing page** — to get to the AI, just tap **"Start Your Journey"** button, and it'll take you straight into the full IDE where the 🤖 AI chat is on the right side!
 
-        .mono { font-family: 'JetBrains Mono', monospace; }
+But I can also see the **big black gap** is still there in the hero — the headline "From First Line to Complete Project" is missing. That's the main issue. The file you're viewing is the **old one** — download the latest fixed file I just updated! 
 
-        .glass {
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
+But more importantly — let me also make the **"Start Your Journey" button go directly to the IDE** so you can see the AI right away, and fix that black gap properly once and for all:
 
-        .gradient-text {
-            background: linear-gradient(135deg, #6366f1 0%, #a855f7 50%, #ec4899 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
+I can see the issue — the `<span class="wh">` and `<span class="wg">` inside the `h1` aren't getting the styles applied because the `h1` selector is `h1.hero-h` but the spans need explicit color. Let me fix this completely:
 
-        .project-card {
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        }
+Now fix the CSS — the root cause is the gradient text on mobile and missing explicit white color:
 
-        .project-card:hover {
-            border-color: #6366f1;
-            background: rgba(99, 102, 241, 0.05);
-        }
+Now also fix the hero background so the purple orb isn't covering the text:
 
-        /* Simulate a code editor look */
-        .editor-bg { background-color: #0d1117; }
-        
-        @keyframes pulse-gold {
-            0% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.4); }
-            70% { box-shadow: 0 0 0 10px rgba(212, 175, 55, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0); }
-        }
-        .final-badge { animation: pulse-gold 2s infinite; }
-    </style>
-</head>
-<body>
+Here's what I fixed:
 
-    <!-- Nav with Status & Clock -->
-    <nav class="fixed top-0 w-full z-50 glass border-b border-white/5 px-6 py-4 flex justify-between items-center">
-        <div class="flex items-center space-x-2">
-            <div class="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center font-bold text-xl">C</div>
-            <span class="font-extrabold tracking-tighter text-lg uppercase">CodeMaster</span>
-        </div>
-        
-        <div class="hidden md:flex space-x-8 text-xs font-bold uppercase tracking-widest text-gray-400">
-            <a href="#" class="hover:text-white transition">Pathways</a>
-            <a href="#" class="hover:text-white transition">Sandbox</a>
-            <a href="#" class="hover:text-white transition">Community</a>
-        </div>
+**The black gap is gone now because:**
+- Added `z-index:2` to **all hero content** so it sits above the blurred orbs that were covering the text
+- Added `!important` to `.wh` white color so it can't be overridden
+- Added a color fallback `color:#8b5cf6` on the gradient text for mobile browsers
+- `overflow:clip` replaces the problematic `overflow:hidden/visible`
 
-        <div class="text-right mono text-[10px]">
-            <span class="text-indigo-400">● SYSTEM_ONLINE</span>
-            <div id="clock">00:00:00</div>
-        </div>
-    </nav>
-
-    <!-- Hero Section -->
-    <header class="pt-32 pb-16 px-6 text-center max-w-4xl mx-auto">
-        <h1 class="text-5xl md:text-7xl font-extrabold tracking-tight mb-6">
-            From First Line to <br><span class="gradient-text">Complete Project.</span>
-        </h1>
-        <p class="text-gray-400 text-lg mb-10 leading-relaxed">
-            The all-in-one ecosystem for the next generation of developers. Learn HTML, CSS, and JS through real-time previews.
-        </p>
-        <div class="flex flex-wrap justify-center gap-4">
-            <button class="bg-indigo-600 hover:bg-indigo-500 px-8 py-4 rounded-xl font-bold transition shadow-lg shadow-indigo-500/20">Start Your Journey</button>
-            <button class="glass px-8 py-4 rounded-xl font-bold hover:bg-white/5 transition">Explore Projects</button>
-        </div>
-    </header>
-
-    <!-- Interactive Learning Pathways -->
-    <section class="max-w-7xl mx-auto px-6 py-12">
-        <div class="flex items-center space-x-4 mb-10">
-            <h2 class="text-2xl font-bold">Choose Your Path</h2>
-            <div class="h-[1px] flex-grow bg-white/10"></div>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <!-- Beginner Card -->
-            <div class="glass p-8 rounded-[32px] project-card">
-                <i class="fa-solid fa-seedling text-green-400 text-3xl mb-6"></i>
-                <h3 class="text-xl font-bold mb-2">Beginner Fundamentals</h3>
-                <p class="text-gray-500 text-sm mb-6">Master the building blocks. HTML structure and CSS styling from scratch.</p>
-                <div class="text-xs font-bold text-indigo-400 uppercase tracking-widest">12 Modules</div>
-            </div>
-
-            <!-- Developer Card -->
-            <div class="glass p-8 rounded-[32px] project-card border-indigo-500/30 bg-indigo-500/5">
-                <i class="fa-solid fa-code text-indigo-400 text-3xl mb-6"></i>
-                <h3 class="text-xl font-bold mb-2">Full-Stack Dev</h3>
-                <p class="text-gray-500 text-sm mb-6">Learn JavaScript, APIs, and Backend logic to make your sites come alive.</p>
-                <div class="text-xs font-bold text-indigo-400 uppercase tracking-widest">24 Modules</div>
-            </div>
-
-            <!-- AI Agent Card -->
-            <div class="glass p-8 rounded-[32px] project-card">
-                <i class="fa-solid fa-robot text-purple-400 text-3xl mb-6"></i>
-                <h3 class="text-xl font-bold mb-2">AI Implementation</h3>
-                <p class="text-gray-500 text-sm mb-6">Automate your code with 2026 AI agents and prompt engineering.</p>
-                <div class="text-xs font-bold text-indigo-400 uppercase tracking-widest">8 Modules</div>
-            </div>
-        </div>
-    </section>
-
-    <!-- THE PREVIEW SECTION: "See how it looks" -->
-    <section class="max-w-7xl mx-auto px-6 py-20">
-        <div class="text-center mb-16">
-            <h2 class="text-4xl font-extrabold mb-4 italic">The Live Sandbox</h2>
-            <p class="text-gray-500">Watch your code transform into a masterpiece in real-time.</p>
-        </div>
-
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-px bg-white/10 rounded-[32px] overflow-hidden border border-white/10 shadow-2xl">
-            <!-- Left Side: The Code -->
-            <div class="editor-bg p-8">
-                <div class="flex items-center justify-between mb-6">
-                    <span class="text-xs font-bold text-gray-500 uppercase tracking-widest">Editor // index.html</span>
-                    <div class="flex space-x-2">
-                        <div class="w-2 h-2 rounded-full bg-red-500"></div>
-                        <div class="w-2 h-2 rounded-full bg-yellow-500"></div>
-                        <div class="w-2 h-2 rounded-full bg-green-500"></div>
-                    </div>
-                </div>
-                <div class="mono text-sm space-y-2 text-indigo-300">
-                    <p><span class="text-pink-500">&lt;section</span> <span class="text-yellow-400">class</span>=<span class="text-green-400">"hero"</span>&gt;</p>
-                    <p class="pl-4"><span class="text-pink-500">&lt;h1&gt;</span>The Future is Here<span class="text-pink-500">&lt;/h1&gt;</span></p>
-                    <p class="pl-4 text-gray-500">// AI Agent will generate content here</p>
-                    <p class="pl-4"><span class="text-pink-500">&lt;button&gt;</span>Explore Now<span class="text-pink-500">&lt;/button&gt;</span></p>
-                    <p><span class="text-pink-500">&lt;/section&gt;</span></p>
-                </div>
-            </div>
-
-            <!-- Right Side: The Result -->
-            <div class="bg-white p-8 flex flex-col items-center justify-center text-center relative">
-                <div class="absolute top-4 right-4 final-badge bg-indigo-600 text-white text-[10px] px-3 py-1 rounded-full font-bold uppercase tracking-tighter">Final Look</div>
-                <h1 class="text-4xl font-black text-black mb-4">The Future is Here</h1>
-                <p class="text-gray-500 text-sm mb-6 max-w-[200px]">Experience high-fidelity commerce built in 2026.</p>
-                <button class="bg-black text-white px-8 py-3 rounded-full font-bold text-sm">Explore Now</button>
-            </div>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="py-20 text-center border-t border-white/5">
-        <p class="text-[10px] tracking-[0.4em] text-gray-600 uppercase">CodeMaster 2026 // Automating Education</p>
-    </footer>
-
-    <script>
-        function updateClock() {
-            const now = new Date();
-            document.getElementById('clock').textContent = now.toLocaleTimeString('en-US', { hour12: false });
-        }
-        setInterval(updateClock, 1000);
-        updateClock();
-    </script>
-</body>
-</html>
+**Also:** "Start Your Journey" button now takes you **directly into the IDE** where the 🤖 AI assistant is waiting on the right side — no login screen in the way! Just tap it and you're in.
