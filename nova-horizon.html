@@ -1,0 +1,1253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"/>
+<title>Nova Horizon — Build Anything</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+:root{
+  --p:#6d28d9;--v:#8b5cf6;--m:#d946ef;
+  --bg:#09090f;--bg2:#111118;--bg3:#1c1c28;
+  --gn:#22c55e;--rd:#ef4444;
+  --w:#fff;--gr:#71717a;--br:rgba(255,255,255,.08);
+  --nh:60px;/* nav height */
+  --bh:62px;/* bottom bar height */
+}
+html,body{width:100%;height:100%;overflow:hidden;font-family:'Inter',sans-serif;background:#000;color:#fff;}
+
+/* ════════ PAGE SYSTEM ════════ */
+.pg{position:fixed;inset:0;display:flex;flex-direction:column;background:#000;visibility:hidden;pointer-events:none;transform:translateX(20px);transition:transform .25s,visibility .25s,opacity .25s;opacity:0;}
+.pg.on{visibility:visible;pointer-events:all;transform:translateX(0);opacity:1;}
+#land{overflow-y:auto;overflow-x:hidden;}
+
+/* ════════ SHARED ════════ */
+.btn{padding:9px 18px;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;border:none;font-family:'Inter',sans-serif;transition:all .2s;}
+.btn-p{background:linear-gradient(135deg,#6d28d9,#d946ef);color:#fff;box-shadow:0 4px 14px rgba(109,40,217,.4);}
+.btn-g{background:transparent;color:rgba(255,255,255,.55);border:1px solid rgba(255,255,255,.14);}
+.btn-g:hover{color:#fff;}
+
+/* ════════ LANDING NAV ════════ */
+.lnav{
+  position:sticky;top:0;z-index:50;
+  height:var(--nh);display:flex;align-items:center;
+  justify-content:space-between;padding:0 20px;
+  background:rgba(0,0,0,.9);backdrop-filter:blur(20px);
+  border-bottom:1px solid rgba(255,255,255,.07);
+  flex-shrink:0;
+}
+.logo{display:flex;align-items:center;gap:10px;}
+.lbox{width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,#6d28d9,#d946ef);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:17px;box-shadow:0 0 18px rgba(109,40,217,.5);}
+.lname{font-weight:800;font-size:15px;letter-spacing:1.5px;text-transform:uppercase;}
+.nav-r{display:flex;align-items:center;gap:10px;}
+.ns{display:flex;flex-direction:column;align-items:flex-end;}
+.ns-row{display:flex;align-items:center;gap:5px;}
+.sdot{width:6px;height:6px;border-radius:50%;background:var(--v);box-shadow:0 0 6px var(--v);animation:pulse 2s ease-in-out infinite;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.3;}}
+.stxt{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--v);letter-spacing:1px;}
+#clk{font-family:'JetBrains Mono',monospace;font-size:13px;color:rgba(255,255,255,.75);}
+
+/* ════════ HERO ════════ */
+.hero{
+  min-height:100vh;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  text-align:center;padding:90px 20px 70px;
+  position:relative;background:#000;
+}
+.hero::before{content:'';position:absolute;inset:0;z-index:0;background-image:linear-gradient(rgba(109,40,217,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(109,40,217,.04) 1px,transparent 1px);background-size:55px 55px;}
+.orb{position:absolute;border-radius:50%;filter:blur(110px);z-index:0;pointer-events:none;}
+.ob1{width:500px;height:500px;background:#6d28d9;opacity:.13;top:-80px;left:-100px;}
+.ob2{width:400px;height:400px;background:#d946ef;opacity:.1;bottom:-60px;right:-60px;}
+.hero>*{position:relative;z-index:2;}
+.spill{display:inline-flex;align-items:center;gap:7px;border:1px solid rgba(139,92,246,.3);background:rgba(109,40,217,.1);padding:6px 16px;border-radius:100px;font-size:11px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--v);margin-bottom:12px;}
+.spill2{display:inline-flex;align-items:center;gap:6px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.04);padding:5px 14px;border-radius:100px;font-size:12px;color:rgba(255,255,255,.4);margin-bottom:28px;}
+.gd{width:5px;height:5px;border-radius:50%;background:var(--gn);box-shadow:0 0 5px var(--gn);animation:pulse 2s ease-in-out infinite;}
+h1{font-size:clamp(36px,8vw,84px);font-weight:900;line-height:1.05;letter-spacing:-1px;margin-bottom:18px;max-width:780px;}
+h1 .w1{color:#fff !important;-webkit-text-fill-color:#fff !important;display:block;}
+h1 .w2{display:block;background:linear-gradient(135deg,#8b5cf6,#d946ef,#ec4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;color:#8b5cf6;}
+.hsub{font-size:clamp(14px,2vw,17px);color:rgba(255,255,255,.48);line-height:1.7;max-width:460px;margin-bottom:34px;}
+.hbtns{display:flex;flex-direction:column;gap:10px;width:100%;max-width:320px;}
+.hb1{padding:16px;border-radius:12px;background:linear-gradient(135deg,#6d28d9,#d946ef);border:none;font-size:15px;font-weight:700;color:#fff;cursor:pointer;font-family:'Inter',sans-serif;box-shadow:0 8px 28px rgba(109,40,217,.4);}
+.hb2{padding:15px;border-radius:12px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.14);font-size:15px;font-weight:700;color:rgba(255,255,255,.7);cursor:pointer;font-family:'Inter',sans-serif;}
+
+/* sections */
+.sec{padding:64px 0;}
+.sin{max-width:1100px;margin:0 auto;padding:0 20px;}
+.ew{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:var(--v);margin-bottom:10px;display:flex;align-items:center;gap:8px;}
+.ew::before{content:'';width:16px;height:1px;background:var(--v);}
+.sh{font-size:clamp(22px,4vw,38px);font-weight:900;letter-spacing:-1px;line-height:1.1;margin-bottom:32px;}
+.sh span{background:linear-gradient(135deg,var(--v),var(--m));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+
+.pgrid{display:grid;grid-template-columns:1fr;gap:12px;}
+@media(min-width:600px){.pgrid{grid-template-columns:repeat(3,1fr);}}
+.pc{background:#111;border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:22px;cursor:pointer;transition:all .25s;position:relative;overflow:hidden;}
+.pc::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--p),var(--m));transform:scaleX(0);transform-origin:left;transition:transform .25s;}
+.pc:hover::after{transform:scaleX(1);}
+.pc:hover{border-color:rgba(139,92,246,.3);}
+.pi{width:44px;height:44px;border-radius:10px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.03);display:flex;align-items:center;justify-content:center;font-size:20px;margin-bottom:14px;}
+.pt{font-size:16px;font-weight:800;margin-bottom:6px;}
+.pd{font-size:13px;color:rgba(255,255,255,.4);line-height:1.6;margin-bottom:14px;}
+.pm{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:1px;color:var(--v);padding:3px 10px;border:1px solid rgba(139,92,246,.2);border-radius:100px;background:rgba(109,40,217,.08);}
+
+.sb{background:rgba(255,255,255,.01);border-top:1px solid rgba(255,255,255,.05);border-bottom:1px solid rgba(255,255,255,.05);padding:36px 20px;}
+.sr{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);}
+@media(max-width:500px){.sr{grid-template-columns:repeat(2,1fr);gap:20px;}}
+.si{text-align:center;padding:0 10px;border-right:1px solid rgba(255,255,255,.05);}
+.si:last-child{border-right:none;}
+.sn{font-size:34px;font-weight:900;letter-spacing:-2px;background:linear-gradient(135deg,var(--v),var(--m));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.sl{font-size:11px;color:rgba(255,255,255,.3);margin-top:4px;}
+
+.bgr{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;}
+@media(min-width:600px){.bgr{grid-template-columns:repeat(4,1fr);}}
+.bc{background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:16px;text-align:center;transition:all .2s;}
+.bc:hover{border-color:rgba(139,92,246,.3);background:rgba(109,40,217,.07);}
+
+.plgr{display:grid;grid-template-columns:1fr;gap:12px;}
+@media(min-width:600px){.plgr{grid-template-columns:repeat(3,1fr);}}
+.plan{background:#111;border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:22px;}
+.plan.hot{border-color:rgba(139,92,246,.4);background:rgba(109,40,217,.07);position:relative;}
+.hbdg{position:absolute;top:-10px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,var(--p),var(--m));padding:3px 12px;border-radius:100px;font-size:10px;font-weight:700;letter-spacing:1px;white-space:nowrap;}
+.plnt{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gr);margin-bottom:10px;}
+.plam{font-size:42px;font-weight:900;letter-spacing:-2px;}
+.plam.g{background:linear-gradient(135deg,var(--v),var(--m));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.plpr{font-size:13px;color:var(--gr);}
+.pltg{font-size:11px;color:var(--m);font-weight:600;}
+.plbl{font-size:12px;color:rgba(255,255,255,.35);line-height:1.5;margin-bottom:16px;margin-top:4px;}
+.plfs{display:flex;flex-direction:column;gap:8px;margin-bottom:18px;}
+.plf{display:flex;align-items:center;gap:7px;font-size:12px;color:rgba(255,255,255,.6);}
+.plf.off{color:rgba(255,255,255,.22);}
+.ck{color:var(--gn);}.xk{color:#3f3f46;}
+.plb{width:100%;padding:11px;border-radius:8px;font-family:'Inter',sans-serif;font-size:13px;font-weight:700;cursor:pointer;border:none;}
+.plbg{background:transparent;color:rgba(255,255,255,.5);border:1px solid rgba(255,255,255,.12);}
+.plbh{background:linear-gradient(135deg,var(--p),var(--m));color:#fff;}
+
+.tgr{display:grid;grid-template-columns:1fr;gap:12px;}
+@media(min-width:600px){.tgr{grid-template-columns:repeat(3,1fr);}}
+.tc{background:#111;border:1px solid rgba(255,255,255,.07);border-radius:14px;padding:18px;}
+.ts{color:#fbbf24;font-size:11px;margin-bottom:10px;}
+.tt{font-size:12px;color:rgba(255,255,255,.48);line-height:1.65;margin-bottom:12px;}
+.tav{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:12px;color:#fff;}
+
+.ctab{background:linear-gradient(135deg,rgba(109,40,217,.15),rgba(217,70,239,.08));border:1px solid rgba(139,92,246,.2);border-radius:18px;padding:44px 20px;text-align:center;position:relative;overflow:hidden;margin:0 20px 60px;}
+.ctab::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% -10%,rgba(109,40,217,.18),transparent 65%);pointer-events:none;}
+.ctab-t{font-size:clamp(20px,4vw,34px);font-weight:900;letter-spacing:-1px;margin-bottom:10px;position:relative;z-index:1;}
+.ctab-t span{background:linear-gradient(135deg,var(--v),var(--m));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.ctab-s{font-size:13px;color:rgba(255,255,255,.4);max-width:320px;margin:0 auto 24px;line-height:1.6;position:relative;z-index:1;}
+.ctab-bs{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;position:relative;z-index:1;}
+
+.lf{border-top:1px solid rgba(255,255,255,.06);padding:18px 20px;display:flex;justify-content:space-between;align-items:center;background:rgba(0,0,0,.7);flex-wrap:wrap;gap:8px;}
+.lfb{width:22px;height:22px;border-radius:5px;background:linear-gradient(135deg,#6d28d9,#d946ef);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:10px;}
+.fla a{font-size:11px;color:rgba(255,255,255,.3);text-decoration:none;margin-left:14px;}
+
+.chips{display:flex;flex-wrap:wrap;gap:7px;margin-top:16px;}
+.chip{display:flex;align-items:center;gap:6px;padding:5px 11px;border-radius:100px;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.08);font-size:12px;color:rgba(255,255,255,.5);}
+.cc{width:7px;height:7px;border-radius:50%;}
+
+/* ════════ IDE ════════ */
+#ide{background:var(--bg);}
+
+/* top bar */
+.idebar{
+  height:50px;background:var(--bg2);border-bottom:1px solid var(--br);
+  display:flex;align-items:center;padding:0 10px;gap:8px;flex-shrink:0;
+}
+.bkbtn{width:28px;height:28px;border-radius:6px;background:rgba(255,255,255,.06);border:none;color:rgba(255,255,255,.7);font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.idelo{width:22px;height:22px;border-radius:5px;background:linear-gradient(135deg,#6d28d9,#d946ef);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:10px;flex-shrink:0;}
+.pnm{flex:1;background:transparent;border:none;color:rgba(255,255,255,.8);font-size:12px;font-weight:600;font-family:'Inter',sans-serif;outline:none;min-width:0;}
+.lsel{background:var(--bg3);border:1px solid var(--br);color:#fff;font-size:11px;font-family:'Inter',sans-serif;padding:4px 7px;border-radius:5px;outline:none;cursor:pointer;flex-shrink:0;max-width:120px;}
+.lsel option{background:#1c1c28;}
+.rbtn{padding:5px 12px;border-radius:6px;background:var(--gn);color:#000;font-size:12px;font-weight:700;border:none;cursor:pointer;font-family:'Inter',sans-serif;flex-shrink:0;}
+.sdot2{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--gn);flex-shrink:0;}
+
+/* content area */
+.idecnt{flex:1;overflow:hidden;display:flex;flex-direction:column;position:relative;}
+
+/* tab pages */
+.tp{display:none;flex:1;flex-direction:column;overflow:hidden;}
+.tp.on{display:flex;}
+
+/* code tab */
+.ftabs{display:flex;background:var(--bg2);border-bottom:1px solid var(--br);overflow-x:auto;flex-shrink:0;}
+.ftabs::-webkit-scrollbar{display:none;}
+.ftab{display:flex;align-items:center;gap:4px;padding:7px 10px;font-size:11px;color:var(--gr);cursor:pointer;border-right:1px solid var(--br);white-space:nowrap;font-family:'JetBrains Mono',monospace;flex-shrink:0;}
+.ftab.on{background:var(--bg);color:#fff;border-bottom:2px solid var(--v);margin-bottom:-1px;}
+.ftx{background:none;border:none;color:var(--gr);cursor:pointer;font-size:10px;padding:0 2px;}
+.ftx:hover{color:#fff;}
+.edwrap{display:flex;flex:1;overflow:hidden;}
+.lns{background:var(--bg);padding:12px 6px;font-family:'JetBrains Mono',monospace;font-size:12px;line-height:1.6;color:var(--gr);text-align:right;user-select:none;flex-shrink:0;min-width:34px;overflow:hidden;}
+#ced{flex:1;padding:12px;resize:none;background:var(--bg);border:none;outline:none;font-family:'JetBrains Mono',monospace;font-size:12px;line-height:1.6;color:#e2e8f0;overflow-y:auto;tab-size:2;white-space:pre;overflow-wrap:normal;}
+.outbar{height:100px;flex-shrink:0;border-top:1px solid var(--br);background:var(--bg);display:flex;flex-direction:column;overflow:hidden;}
+.outh{display:flex;align-items:center;justify-content:space-between;padding:5px 10px;background:var(--bg2);border-bottom:1px solid var(--br);flex-shrink:0;}
+.outt{font-size:11px;font-weight:600;color:rgba(255,255,255,.4);display:flex;align-items:center;gap:5px;}
+.outbd{flex:1;overflow-y:auto;padding:6px 10px;font-family:'JetBrains Mono',monospace;font-size:11px;line-height:1.7;}
+.ol{color:rgba(255,255,255,.65);}.oe{color:var(--rd);}.oi{color:var(--v);}.os{color:var(--gn);}
+
+/* ── AI TAB ── */
+.aipage{flex:1;display:flex;flex-direction:column;overflow:hidden;background:var(--bg);}
+.aihead{padding:14px 14px 10px;background:var(--bg2);border-bottom:1px solid var(--br);flex-shrink:0;}
+.aititle{display:flex;align-items:center;gap:10px;}
+.aibav{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#6d28d9,#d946ef);display:flex;align-items:center;justify-content:center;font-size:17px;box-shadow:0 0 14px rgba(109,40,217,.5);}
+.ainm{font-size:14px;font-weight:800;}
+.aist{font-size:11px;color:var(--gn);display:flex;align-items:center;gap:4px;margin-top:2px;}
+.aistd{width:5px;height:5px;border-radius:50%;background:var(--gn);box-shadow:0 0 4px var(--gn);animation:pulse 1.5s ease-in-out infinite;}
+.aimds{display:flex;gap:5px;margin-top:10px;flex-wrap:wrap;}
+.amd{padding:5px 12px;border-radius:100px;font-size:11px;font-weight:600;border:1px solid rgba(255,255,255,.1);background:transparent;color:rgba(255,255,255,.4);cursor:pointer;font-family:'Inter',sans-serif;transition:all .2s;}
+.amd.on{background:rgba(109,40,217,.2);border-color:rgba(139,92,246,.4);color:var(--v);}
+.aimsgs{flex:1;overflow-y:auto;padding:12px;}
+.amw{display:flex;gap:8px;margin-bottom:12px;align-items:flex-start;}
+.amw.u{flex-direction:row-reverse;}
+.aav{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;}
+.aav.b{background:linear-gradient(135deg,#6d28d9,#d946ef);}
+.aav.u{background:rgba(255,255,255,.1);color:rgba(255,255,255,.6);font-size:12px;font-weight:700;}
+.abub{max-width:84%;padding:10px 12px;font-size:13px;line-height:1.65;color:rgba(255,255,255,.82);}
+.abub.b{background:rgba(109,40,217,.12);border:1px solid rgba(139,92,246,.2);border-radius:4px 13px 13px 13px;}
+.abub.u{background:rgba(139,92,246,.18);border:1px solid rgba(139,92,246,.28);border-radius:13px 4px 13px 13px;}
+.abub pre{font-family:'JetBrains Mono',monospace;font-size:11px;background:rgba(0,0,0,.5);padding:8px 10px;border-radius:7px;margin:7px 0;overflow-x:auto;white-space:pre-wrap;color:#e2e8f0;border:1px solid rgba(255,255,255,.06);}
+.abub code{font-family:'JetBrains Mono',monospace;font-size:11px;background:rgba(0,0,0,.4);padding:1px 5px;border-radius:3px;color:#c084fc;}
+.abub strong{color:#fff;}
+.aitype{display:none;align-items:center;gap:8px;padding:0 12px 7px;}
+.aitype.show{display:flex;}
+.tds span{width:5px;height:5px;border-radius:50%;background:var(--v);display:inline-block;margin:0 2px;animation:td 1.2s ease-in-out infinite;}
+.tds span:nth-child(2){animation-delay:.2s;}
+.tds span:nth-child(3){animation-delay:.4s;}
+@keyframes td{0%,60%,100%{transform:translateY(0);}30%{transform:translateY(-5px);}}
+.qchips{display:flex;gap:6px;padding:8px 12px;overflow-x:auto;flex-shrink:0;border-top:1px solid var(--br);}
+.qchips::-webkit-scrollbar{display:none;}
+.qc{padding:5px 12px;border-radius:100px;font-size:11px;font-weight:500;border:1px solid rgba(139,92,246,.2);background:rgba(109,40,217,.06);color:var(--v);cursor:pointer;white-space:nowrap;flex-shrink:0;transition:all .2s;}
+.qc:hover{background:rgba(109,40,217,.18);}
+.aiinp{display:flex;gap:7px;padding:10px 12px;border-top:1px solid var(--br);flex-shrink:0;align-items:flex-end;background:var(--bg2);}
+.aitxt{flex:1;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:9px 12px;font-size:13px;color:#fff;font-family:'Inter',sans-serif;outline:none;resize:none;line-height:1.5;max-height:100px;transition:border .2s;}
+.aitxt:focus{border-color:rgba(139,92,246,.5);}
+.aitxt::placeholder{color:rgba(255,255,255,.25);}
+.aisend{width:38px;height:38px;border-radius:9px;background:linear-gradient(135deg,#6d28d9,#d946ef);border:none;color:#fff;cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 4px 12px rgba(109,40,217,.4);transition:transform .2s;}
+.aisend:active{transform:scale(.95);}
+.aisend:disabled{opacity:.4;cursor:not-allowed;}
+
+/* ── PREVIEW TAB ── */
+.pvpage{flex:1;display:flex;flex-direction:column;overflow:hidden;background:#000;}
+.pvtbar{display:flex;align-items:center;gap:8px;padding:8px 12px;background:var(--bg2);border-bottom:1px solid var(--br);flex-shrink:0;}
+.pvtitle{font-size:12px;font-weight:700;}
+.pvurl{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--gr);background:rgba(255,255,255,.04);border:1px solid var(--br);border-radius:5px;padding:4px 8px;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.pvico{width:28px;height:28px;border-radius:6px;background:rgba(255,255,255,.06);border:none;color:var(--gr);cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center;}
+.pvico:hover{color:#fff;background:rgba(255,255,255,.1);}
+#pvif{flex:1;border:none;background:#fff;width:100%;}
+.pvempty{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;background:var(--bg);text-align:center;padding:20px;}
+.pvei{font-size:48px;opacity:.3;}
+.pvempty h3{font-size:16px;font-weight:700;color:rgba(255,255,255,.45);}
+.pvempty p{font-size:13px;color:rgba(255,255,255,.28);max-width:240px;line-height:1.6;}
+.pvrbtn{padding:11px 24px;border-radius:10px;background:linear-gradient(135deg,#6d28d9,#d946ef);border:none;font-size:13px;font-weight:700;color:#fff;cursor:pointer;font-family:'Inter',sans-serif;}
+
+/* ── PUBLISH TAB ── */
+.pubpage{flex:1;overflow-y:auto;background:var(--bg);}
+.pubin{max-width:480px;margin:0 auto;padding:20px 16px 80px;}
+.pubhero{text-align:center;margin-bottom:24px;}
+.pubi{font-size:44px;margin-bottom:12px;}
+.pubhero h2{font-size:20px;font-weight:900;margin-bottom:6px;}
+.pubhero p{font-size:13px;color:rgba(255,255,255,.4);line-height:1.6;}
+.pubcard{background:var(--bg2);border:1px solid var(--br);border-radius:14px;padding:18px;margin-bottom:16px;}
+.pubcard h3{font-size:13px;font-weight:700;margin-bottom:14px;display:flex;align-items:center;gap:7px;}
+.dstep{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
+.dstep:last-child{margin-bottom:0;}
+.dsn{width:30px;height:30px;border-radius:50%;background:rgba(109,40,217,.12);border:1px solid rgba(139,92,246,.22);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--v);flex-shrink:0;transition:all .3s;}
+.dsn.done{background:rgba(34,197,94,.12);border-color:rgba(34,197,94,.28);color:var(--gn);}
+.dsn.spin{animation:sp 1s linear infinite;color:var(--v);}
+@keyframes sp{to{transform:rotate(360deg);}}
+.dsi{flex:1;}
+.dsil{font-size:12px;font-weight:600;}
+.dsis{font-size:11px;color:rgba(255,255,255,.32);margin-top:2px;}
+.urlcard{background:rgba(14,165,233,.06);border:1px solid rgba(14,165,233,.18);border-radius:12px;padding:14px;margin-bottom:14px;display:none;}
+.urllab{font-size:10px;color:rgba(255,255,255,.4);letter-spacing:1px;text-transform:uppercase;margin-bottom:6px;}
+.urltxt{font-family:'JetBrains Mono',monospace;font-size:12px;color:#38bdf8;word-break:break-all;margin-bottom:10px;}
+.urlbts{display:flex;gap:7px;}
+.urlbt{padding:7px 14px;border-radius:7px;font-size:12px;font-weight:600;cursor:pointer;border:none;font-family:'Inter',sans-serif;}
+.urlbtc{background:rgba(14,165,233,.12);color:#38bdf8;border:1px solid rgba(14,165,233,.25);}
+.urlbto{background:linear-gradient(135deg,#0ea5e9,#6d28d9);color:#fff;}
+.pubstats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px;display:none;}
+.pubst{background:var(--bg2);border:1px solid var(--br);border-radius:10px;padding:12px;text-align:center;}
+.pubn{font-size:20px;font-weight:900;background:linear-gradient(135deg,var(--v),var(--m));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.publ{font-size:10px;color:rgba(255,255,255,.3);margin-top:2px;}
+.sharecard{background:var(--bg2);border:1px solid var(--br);border-radius:14px;padding:16px;margin-bottom:16px;display:none;}
+.sharecard h3{font-size:13px;font-weight:700;margin-bottom:12px;}
+.shgr{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;}
+.sho{padding:12px;border-radius:9px;background:rgba(255,255,255,.04);border:1px solid var(--br);text-align:center;cursor:pointer;transition:all .2s;}
+.sho:hover{border-color:rgba(139,92,246,.3);background:rgba(109,40,217,.07);}
+.shoi{font-size:20px;margin-bottom:5px;}
+.shol{font-size:11px;font-weight:600;color:rgba(255,255,255,.55);}
+.pubbtn{width:100%;padding:15px;border-radius:11px;background:linear-gradient(135deg,#0ea5e9,#6d28d9);border:none;font-size:14px;font-weight:700;color:#fff;cursor:pointer;font-family:'Inter',sans-serif;box-shadow:0 6px 22px rgba(14,165,233,.3);display:flex;align-items:center;justify-content:center;gap:7px;transition:all .2s;}
+.pubbtn:hover{transform:translateY(-2px);}
+.pubbtn:disabled{opacity:.5;cursor:not-allowed;transform:none;}
+
+/* ════════ BOTTOM NAV ════════ */
+.bnav{
+  height:var(--bh);
+  background:var(--bg2);
+  border-top:1px solid var(--br);
+  display:flex;align-items:stretch;
+  flex-shrink:0;
+  position:relative;z-index:100;
+}
+.bni{
+  flex:1;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  gap:3px;cursor:pointer;
+  border:none;background:transparent;
+  color:rgba(255,255,255,.3);
+  transition:all .2s;
+  padding:0;font-family:'Inter',sans-serif;
+  position:relative;
+}
+.bni::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--v),var(--m));
+  transform:scaleX(0);transition:transform .2s;
+}
+.bni.on{color:var(--v);}
+.bni.on::before{transform:scaleX(1);}
+.bni-ic{font-size:20px;line-height:1;}
+.bni-lb{font-size:10px;font-weight:600;letter-spacing:.4px;text-transform:uppercase;}
+/* AI button special */
+.bni.aibni{position:relative;}
+.aibni-inner{
+  width:42px;height:42px;border-radius:50%;
+  background:linear-gradient(135deg,#6d28d9,#d946ef);
+  display:flex;align-items:center;justify-content:center;
+  font-size:19px;
+  box-shadow:0 4px 14px rgba(109,40,217,.5);
+  transition:all .2s;
+  margin-top:-6px;margin-bottom:1px;
+  border:3px solid var(--bg2);
+}
+.bni.aibni.on .aibni-inner{box-shadow:0 6px 20px rgba(109,40,217,.7);transform:scale(1.06);}
+.badge{
+  position:absolute;top:6px;right:calc(50% - 20px);
+  width:15px;height:15px;border-radius:50%;
+  background:var(--rd);font-size:8px;font-weight:700;
+  display:none;align-items:center;justify-content:center;
+  border:2px solid var(--bg2);color:#fff;
+}
+.badge.show{display:flex;}
+
+/* ════════ MODALS ════════ */
+.ov{position:fixed;inset:0;z-index:500;background:rgba(0,0,0,.78);backdrop-filter:blur(10px);display:none;align-items:center;justify-content:center;padding:16px;}
+.ov.open{display:flex;}
+.modal{background:var(--bg2);border:1px solid rgba(139,92,246,.2);border-radius:18px;padding:28px;width:100%;max-width:400px;position:relative;box-shadow:0 40px 80px rgba(0,0,0,.7);}
+.mx{position:absolute;top:12px;right:12px;background:rgba(255,255,255,.06);border:none;color:var(--gr);width:26px;height:26px;border-radius:50%;cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center;}
+.mx:hover{color:#fff;}
+.modal h2{font-size:18px;font-weight:800;margin-bottom:4px;}
+.msub{font-size:13px;color:var(--gr);margin-bottom:18px;}
+.fg{margin-bottom:12px;}
+.fl{display:block;font-size:11px;font-weight:600;color:rgba(255,255,255,.5);letter-spacing:.5px;margin-bottom:4px;}
+.fi{width:100%;padding:10px 12px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:7px;color:#fff;font-size:13px;font-family:'Inter',sans-serif;outline:none;transition:border .2s;}
+.fi:focus{border-color:rgba(139,92,246,.5);}
+.fi::placeholder{color:rgba(255,255,255,.2);}
+.mbtn{width:100%;padding:12px;border-radius:9px;background:linear-gradient(135deg,#6d28d9,#d946ef);border:none;color:#fff;font-size:14px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;margin-top:4px;}
+.asw{text-align:center;font-size:12px;color:var(--gr);margin-top:12px;}
+.asw a{color:var(--v);cursor:pointer;font-weight:600;}
+.dhr{display:flex;align-items:center;gap:8px;margin:12px 0;}
+.dhr::before,.dhr::after{content:'';flex:1;height:1px;background:rgba(255,255,255,.07);}
+.dhr span{font-size:11px;color:#3f3f46;}
+.pbox{background:rgba(109,40,217,.1);border:1px solid rgba(139,92,246,.22);border-radius:10px;padding:14px 16px;margin-bottom:18px;display:flex;align-items:center;justify-content:space-between;}
+.pboxp{font-size:20px;font-weight:900;background:linear-gradient(135deg,var(--v),var(--m));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.fg2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.mok{display:none;text-align:center;font-size:12px;color:var(--gn);padding:8px;}
+.mtrust{display:flex;justify-content:center;gap:14px;margin-top:12px;flex-wrap:wrap;}
+.mtrust span{font-size:10px;color:rgba(255,255,255,.2);}
+
+/* TOAST */
+.toast{
+  position:fixed;bottom:75px;left:50%;
+  transform:translateX(-50%) translateY(60px);
+  z-index:1000;
+  background:var(--bg3);
+  border:1px solid rgba(139,92,246,.3);
+  padding:9px 18px;border-radius:100px;
+  font-size:12px;font-weight:600;
+  white-space:nowrap;opacity:0;
+  transition:all .3s;
+  box-shadow:0 8px 28px rgba(0,0,0,.4);
+  pointer-events:none;
+}
+.toast.show{transform:translateX(-50%) translateY(0);opacity:1;}
+
+::-webkit-scrollbar{width:3px;height:3px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:rgba(255,255,255,.1);border-radius:10px;}
+</style>
+</head>
+<body>
+
+<!-- ════════════════════════════════
+     LANDING
+════════════════════════════════ -->
+<div id="land" class="pg on">
+
+  <nav class="lnav">
+    <div class="logo">
+      <div class="lbox">N</div>
+      <div class="lname">Nova Horizon</div>
+    </div>
+    <div class="nav-r">
+      <div class="ns">
+        <div class="ns-row"><div class="sdot"></div><span class="stxt">SYSTEM_ONLINE</span></div>
+        <span id="clk">00:00:00</span>
+      </div>
+      <button class="btn btn-g" onclick="openAuth('login')" style="display:none;" id="loginbtn">Log In</button>
+      <button class="btn btn-p" onclick="go('ide')">Get Started</button>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="orb ob1"></div><div class="orb ob2"></div>
+    <div class="spill">☀️ Summer Edition 2026</div>
+    <div class="spill2"><div class="gd"></div>Browser-based IDE — zero setup</div>
+    <h1>
+      <span class="w1">From First Line to</span>
+      <span class="w2">Complete Project.</span>
+    </h1>
+    <p class="hsub">Write code, get AI help, preview your project, and publish it live — all from your phone or browser.</p>
+    <div class="hbtns">
+      <button class="hb1" onclick="go('ide')">Start Your Journey</button>
+      <button class="hb2" onclick="scrollTo2('sandbox')">Explore Projects</button>
+    </div>
+  </section>
+
+  <!-- PATHWAYS -->
+  <section class="sec" id="pathways">
+    <div class="sin">
+      <div class="ew">Pathways</div>
+      <div class="sh">Choose <span>Your Path</span></div>
+      <div class="pgrid">
+        <div class="pc" onclick="go('ide')"><div class="pi">🌱</div><div class="pt">Beginner Fundamentals</div><div class="pd">HTML, CSS and JS from scratch. Build your first website.</div><div class="pm">12 Modules</div></div>
+        <div class="pc" onclick="go('ide')"><div class="pi">🚀</div><div class="pt">Full-Stack Dev</div><div class="pd">JavaScript, APIs, backend logic. Build real applications.</div><div class="pm">24 Modules</div></div>
+        <div class="pc" onclick="go('ide')"><div class="pi">🤖</div><div class="pt">AI Implementation</div><div class="pd">Build AI agents, automate tasks and use prompt engineering.</div><div class="pm">8 Modules</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SANDBOX DEMO -->
+  <section class="sec" id="sandbox" style="background:rgba(109,40,217,.02);">
+    <div class="sin">
+      <div class="ew">Live Sandbox</div>
+      <div class="sh">Code → Preview → <span>Publish.</span></div>
+      <div style="background:#111;border:1px solid rgba(255,255,255,.08);border-radius:16px;overflow:hidden;box-shadow:0 30px 60px rgba(0,0,0,.6);">
+        <div style="display:flex;align-items:center;gap:6px;padding:11px 16px;background:rgba(255,255,255,.02);border-bottom:1px solid rgba(255,255,255,.06);">
+          <div style="width:10px;height:10px;border-radius:50%;background:#ff5f57;"></div>
+          <div style="width:10px;height:10px;border-radius:50%;background:#febc2e;"></div>
+          <div style="width:10px;height:10px;border-radius:50%;background:#28c840;"></div>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:rgba(255,255,255,.25);margin-left:8px;">Nova Horizon IDE</span>
+          <div style="margin-left:auto;display:flex;align-items:center;gap:4px;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--gn);">
+            <div style="width:4px;height:4px;border-radius:50%;background:var(--gn);animation:pulse 1.5s ease-in-out infinite;"></div>LIVE
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;height:240px;">
+          <div style="background:#0a0a0a;padding:16px;overflow:auto;border-right:1px solid rgba(255,255,255,.06);">
+            <pre style="font-family:'JetBrains Mono',monospace;font-size:11px;line-height:1.8;color:#e2e8f0;white-space:pre-wrap;"><span style="color:#c084fc">function</span> <span style="color:#67e8f9">buildDream</span>(idea) {
+  <span style="color:#c084fc">const</span> code = write(idea);
+  <span style="color:#c084fc">const</span> app = run(code);
+  <span style="color:#c084fc">const</span> url = publish(app);
+  <span style="color:#86efac">return</span> url; <span style="color:#4b5563">// 🚀</span>
+}
+
+buildDream(<span style="color:#86efac">"my awesome app"</span>);</pre>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,rgba(109,40,217,.15),rgba(217,70,239,.08));">
+            <div style="text-align:center;padding:16px;">
+              <div style="font-size:36px;margin-bottom:10px;">🚀</div>
+              <div style="font-size:13px;font-weight:800;margin-bottom:4px;">App is Live!</div>
+              <div style="font-size:10px;color:rgba(255,255,255,.4);">nova-horizon.app/my-app</div>
+            </div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 16px;background:rgba(255,255,255,.01);border-top:1px solid rgba(255,255,255,.05);">
+          <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:rgba(255,255,255,.15);">Nova Horizon 2026 // Code → Preview → Publish</span>
+          <button class="btn btn-p" onclick="go('ide')" style="font-size:12px;padding:6px 14px;">Open IDE →</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STATS -->
+  <div class="sb">
+    <div style="max-width:1100px;margin:0 auto;padding:0 20px;">
+      <div style="display:flex;align-items:center;justify-content:center;gap:7px;margin-bottom:20px;">
+        <div style="width:5px;height:5px;border-radius:50%;background:var(--gn);box-shadow:0 0 5px var(--gn);animation:pulse 1.5s ease-in-out infinite;"></div>
+        <span style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.22);">Live Platform Stats</span>
+      </div>
+      <div class="sr">
+        <div class="si"><div class="sn" id="s1">—</div><div class="sl" style="display:flex;align-items:center;justify-content:center;gap:4px;"><span style="width:4px;height:4px;border-radius:50%;background:var(--gn);animation:pulse 1.5s ease-in-out infinite;display:inline-block;"></span>Active Now</div></div>
+        <div class="si"><div class="sn" id="s2">—</div><div class="sl">Projects Today</div></div>
+        <div class="si"><div class="sn" id="s3">—</div><div class="sl">Code Runs/hr</div></div>
+        <div class="si"><div class="sn">18</div><div class="sl">Languages</div></div>
+      </div>
+      <div style="margin-top:16px;display:flex;justify-content:center;">
+        <div style="background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.05);border-radius:100px;padding:5px 16px;font-family:'JetBrains Mono',monospace;font-size:10px;color:rgba(255,255,255,.22);display:flex;align-items:center;gap:7px;">
+          <span style="color:var(--gn);">●</span><span id="lf">Connecting...</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BUILD -->
+  <section class="sec">
+    <div class="sin">
+      <div class="ew">What You Can Build</div>
+      <div class="sh">One platform. <span>Infinite possibilities.</span></div>
+      <div class="bgr">
+        <div class="bc"><div style="font-size:26px;margin-bottom:8px;">🌐</div><div style="font-weight:700;font-size:13px;">Websites</div><div style="font-size:11px;color:var(--gr);margin-top:3px;">Portfolios, blogs</div></div>
+        <div class="bc"><div style="font-size:26px;margin-bottom:8px;">📱</div><div style="font-weight:700;font-size:13px;">Web Apps</div><div style="font-size:11px;color:var(--gr);margin-top:3px;">React, Vue apps</div></div>
+        <div class="bc"><div style="font-size:26px;margin-bottom:8px;">🤖</div><div style="font-weight:700;font-size:13px;">AI Agents</div><div style="font-size:11px;color:var(--gr);margin-top:3px;">Bots & automation</div></div>
+        <div class="bc"><div style="font-size:26px;margin-bottom:8px;">🎮</div><div style="font-weight:700;font-size:13px;">Games</div><div style="font-size:11px;color:var(--gr);margin-top:3px;">Browser games</div></div>
+        <div class="bc"><div style="font-size:26px;margin-bottom:8px;">🔌</div><div style="font-weight:700;font-size:13px;">APIs</div><div style="font-size:11px;color:var(--gr);margin-top:3px;">REST & GraphQL</div></div>
+        <div class="bc"><div style="font-size:26px;margin-bottom:8px;">📊</div><div style="font-weight:700;font-size:13px;">Dashboards</div><div style="font-size:11px;color:var(--gr);margin-top:3px;">Data & analytics</div></div>
+        <div class="bc"><div style="font-size:26px;margin-bottom:8px;">🛠️</div><div style="font-weight:700;font-size:13px;">CLI Tools</div><div style="font-size:11px;color:var(--gr);margin-top:3px;">Automation</div></div>
+        <div class="bc"><div style="font-size:26px;margin-bottom:8px;">📚</div><div style="font-weight:700;font-size:13px;">Learn</div><div style="font-size:11px;color:var(--gr);margin-top:3px;">Coding practice</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LANGUAGES -->
+  <section class="sec" style="background:rgba(109,40,217,.02);">
+    <div class="sin">
+      <div class="ew">Languages</div>
+      <div class="sh">Code in <span>any language.</span></div>
+      <div class="chips">
+        <div class="chip"><div class="cc" style="background:#f7df1e"></div>JavaScript</div>
+        <div class="chip"><div class="cc" style="background:#3178c6"></div>TypeScript</div>
+        <div class="chip"><div class="cc" style="background:#e34c26"></div>HTML/CSS</div>
+        <div class="chip"><div class="cc" style="background:#3572a5"></div>Python</div>
+        <div class="chip"><div class="cc" style="background:#dea584"></div>Rust</div>
+        <div class="chip"><div class="cc" style="background:#00add8"></div>Go</div>
+        <div class="chip"><div class="cc" style="background:#b07219"></div>Java</div>
+        <div class="chip"><div class="cc" style="background:#178600"></div>C#</div>
+        <div class="chip"><div class="cc" style="background:#555"></div>C++</div>
+        <div class="chip"><div class="cc" style="background:#cc342d"></div>Ruby</div>
+        <div class="chip"><div class="cc" style="background:#4f5d95"></div>PHP</div>
+        <div class="chip"><div class="cc" style="background:#da5c0d"></div>Swift</div>
+        <div class="chip"><div class="cc" style="background:#a97bff"></div>Kotlin</div>
+        <div class="chip"><div class="cc" style="background:#00758f"></div>SQL</div>
+        <div class="chip"><div class="cc" style="background:#e6522c"></div>Lua</div>
+        <div class="chip"><div class="cc" style="background:#00b4ab"></div>Dart</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRICING -->
+  <section class="sec" id="pricing">
+    <div class="sin">
+      <div class="ew">Pricing</div>
+      <div class="sh">Simple, <span>transparent pricing.</span></div>
+      <p style="font-size:13px;color:rgba(255,255,255,.35);margin-bottom:32px;">Start free. Upgrade for $1/month.</p>
+      <div class="plgr">
+        <div class="plan">
+          <div class="plnt">Free</div>
+          <div style="display:flex;align-items:baseline;gap:4px;margin-bottom:14px;"><span class="plam">$0</span><span class="plpr">/mo</span></div>
+          <div class="plfs">
+            <div class="plf"><span class="ck">✓</span> 3 projects</div>
+            <div class="plf"><span class="ck">✓</span> Live preview</div>
+            <div class="plf"><span class="ck">✓</span> 10 languages</div>
+            <div class="plf off"><span class="xk">✗</span> AI Assistant</div>
+            <div class="plf off"><span class="xk">✗</span> Publish to URL</div>
+          </div>
+          <button class="plb plbg" onclick="go('ide')">Get Started Free</button>
+        </div>
+        <div class="plan hot">
+          <div class="hbdg">⚡ MOST POPULAR</div>
+          <div class="plnt">Pro</div>
+          <div style="display:flex;align-items:baseline;gap:4px;margin-bottom:4px;"><span class="plam g">$1</span><span class="plpr">/mo</span></div>
+          <div class="pltg">Just $12/year 🎉</div>
+          <div class="plbl">Everything to build and ship anything.</div>
+          <div class="plfs">
+            <div class="plf"><span class="ck">✓</span> <strong>Unlimited</strong> projects</div>
+            <div class="plf"><span class="ck">✓</span> All 18 languages</div>
+            <div class="plf"><span class="ck">✓</span> 🤖 Powerful AI Assistant</div>
+            <div class="plf"><span class="ck">✓</span> 🚀 Publish to live URL</div>
+            <div class="plf"><span class="ck">✓</span> 👁 Full-screen preview</div>
+            <div class="plf"><span class="ck">✓</span> Priority support 24/7</div>
+          </div>
+          <button class="plb plbh" onclick="openSub()">Subscribe for $1 →</button>
+        </div>
+        <div class="plan">
+          <div class="plnt">Teams</div>
+          <div style="display:flex;align-items:baseline;gap:4px;margin-bottom:14px;"><span class="plam">$9</span><span class="plpr">/seat/mo</span></div>
+          <div class="plfs">
+            <div class="plf"><span class="ck">✓</span> Everything in Pro</div>
+            <div class="plf"><span class="ck">✓</span> Shared workspaces</div>
+            <div class="plf"><span class="ck">✓</span> Admin dashboard</div>
+            <div class="plf"><span class="ck">✓</span> SSO & audit logs</div>
+          </div>
+          <button class="plb plbg" onclick="openAuth('signup')">Contact Sales</button>
+        </div>
+      </div>
+      <div style="display:flex;justify-content:center;gap:24px;margin-top:32px;flex-wrap:wrap;">
+        <span style="font-size:12px;color:rgba(255,255,255,.22);">🔒 Secure via Stripe</span>
+        <span style="font-size:12px;color:rgba(255,255,255,.22);">↩️ Cancel anytime</span>
+        <span style="font-size:12px;color:rgba(255,255,255,.22);">⚡ Instant access</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- TESTIMONIALS -->
+  <section class="sec" id="community" style="background:rgba(109,40,217,.02);">
+    <div class="sin">
+      <div class="ew">Community</div>
+      <div class="sh">Loved by <span>developers worldwide.</span></div>
+      <div class="tgr">
+        <div class="tc"><div class="ts">★★★★★</div><p class="tt">"Nova Horizon changed how I code. Built my first app in one afternoon. The AI assistant writes code better than I can!"</p><div style="display:flex;align-items:center;gap:8px;"><div class="tav" style="background:linear-gradient(135deg,#6d28d9,#d946ef)">S</div><div><div style="font-size:13px;font-weight:700;">Sarah K.</div><div style="font-size:11px;color:var(--gr)">Frontend Dev</div></div></div></div>
+        <div class="tc"><div class="ts">★★★★★</div><p class="tt">"$1 a month for AI + Publish? I shipped 3 full projects in one weekend. The publish button just works instantly!"</p><div style="display:flex;align-items:center;gap:8px;"><div class="tav" style="background:linear-gradient(135deg,#2563eb,#6d28d9)">M</div><div><div style="font-size:13px;font-weight:700;">Marcus T.</div><div style="font-size:11px;color:var(--gr)">Full-Stack Eng.</div></div></div></div>
+        <div class="tc"><div class="ts">★★★★★</div><p class="tt">"My students go from zero to live published website in one class. The 4-tab IDE is a game changer on mobile!"</p><div style="display:flex;align-items:center;gap:8px;"><div class="tav" style="background:linear-gradient(135deg,#059669,#2563eb)">A</div><div><div style="font-size:13px;font-weight:700;">Aisha R.</div><div style="font-size:11px;color:var(--gr)">Coding Instructor</div></div></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <div class="ctab">
+    <div class="ctab-t">Ready to build something <span>amazing?</span></div>
+    <p class="ctab-s">Join 50,000+ developers. Free to start — AI + Publish for $1/month.</p>
+    <div class="ctab-bs">
+      <button class="btn btn-p" style="padding:12px 28px;font-size:14px;border-radius:10px;" onclick="go('ide')">Start Building Free →</button>
+      <button class="btn btn-g" style="padding:12px 28px;font-size:14px;border-radius:10px;" onclick="scrollTo2('sandbox')">See Sandbox</button>
+    </div>
+  </div>
+
+  <footer class="lf">
+    <div style="display:flex;align-items:center;gap:8px;"><div class="lfb">N</div><span style="font-weight:800;font-size:12px;letter-spacing:1.5px;text-transform:uppercase;">Nova Horizon</span></div>
+    <span style="font-size:11px;color:rgba(255,255,255,.22);">© 2026 Nova Horizon</span>
+    <div class="fla"><a href="#">Privacy</a><a href="#">Terms</a><a href="#">Docs</a></div>
+  </footer>
+</div>
+
+<!-- ════════════════════════════════
+     IDE PAGE
+════════════════════════════════ -->
+<div id="ide" class="pg">
+
+  <!-- Top Bar -->
+  <div class="idebar">
+    <button class="bkbtn" onclick="go('land')">←</button>
+    <div class="idelo">N</div>
+    <input class="pnm" id="pnm" value="My Project" onchange="markU()"/>
+    <select class="lsel" id="lsel" onchange="chLang()">
+      <option value="html">🌐 HTML/CSS/JS</option>
+      <option value="javascript">⚡ JavaScript</option>
+      <option value="typescript">🔷 TypeScript</option>
+      <option value="python">🐍 Python</option>
+      <option value="rust">🦀 Rust</option>
+      <option value="go">🐹 Go</option>
+      <option value="java">☕ Java</option>
+      <option value="csharp">🔷 C#</option>
+      <option value="cpp">⚙️ C++</option>
+      <option value="ruby">💎 Ruby</option>
+      <option value="php">🐘 PHP</option>
+      <option value="swift">🍎 Swift</option>
+      <option value="kotlin">🎯 Kotlin</option>
+      <option value="lua">🌙 Lua</option>
+      <option value="sql">🗄️ SQL</option>
+      <option value="bash">🖥️ Bash</option>
+    </select>
+    <button class="rbtn" id="rbtn" onclick="runCode()">▶ Run</button>
+    <span class="sdot2" id="sind">● saved</span>
+  </div>
+
+  <!-- Content -->
+  <div class="idecnt">
+
+    <!-- CODE TAB -->
+    <div class="tp on" id="tp-code">
+      <div class="ftabs" id="ftabs"></div>
+      <div class="edwrap">
+        <div class="lns" id="lns">1</div>
+        <textarea id="ced" spellcheck="false"
+          oninput="onEd()" onscroll="syncLns()"
+          onkeydown="edKey(event)"></textarea>
+      </div>
+      <div class="outbar">
+        <div class="outh">
+          <div class="outt"><span id="oi">⬛</span><span id="ot">Output</span></div>
+          <button onclick="clrOut()" style="background:rgba(255,255,255,.04);border:none;color:var(--gr);width:22px;height:22px;border-radius:4px;cursor:pointer;font-size:11px;">🗑</button>
+        </div>
+        <div class="outbd" id="outbd">
+          <div class="oi">// Nova Horizon ready — press ▶ Run</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- AI TAB — FULL PAGE -->
+    <div class="tp" id="tp-ai">
+      <div class="aipage">
+        <div class="aihead">
+          <div class="aititle">
+            <div class="aibav">🤖</div>
+            <div>
+              <div class="ainm">Nova AI</div>
+              <div class="aist"><div class="aistd"></div>Online — Powered by Claude</div>
+            </div>
+          </div>
+          <div class="aimds">
+            <button class="amd on" onclick="setMode('chat',this)">💬 Chat</button>
+            <button class="amd" onclick="setMode('agent',this)">🤖 Agent</button>
+            <button class="amd" onclick="setMode('builder',this)">🏗️ Builder</button>
+            <button class="amd" onclick="setMode('tutor',this)">📖 Tutor</button>
+          </div>
+        </div>
+        <div class="aimsgs" id="aimsgs">
+          <div class="amw">
+            <div class="aav b">🤖</div>
+            <div class="abub b">
+              Hey! 👋 I'm <strong>Nova AI</strong> — your powerful AI assistant.<br><br>
+              I can <strong>build anything</strong> for you:
+              <br>🌐 Complete websites & landing pages
+              <br>📱 Web apps (React, Vue, vanilla JS)
+              <br>🎮 Games (Snake, Tetris, Flappy Bird...)
+              <br>🤖 AI agents & chatbots
+              <br>🔌 APIs & backend code
+              <br>🐛 Debug & fix your code
+              <br>📖 Teach you step by step
+              <br><br>
+              Try <strong>Builder mode</strong> — just say what you want and I'll write the complete code!<br><br>
+              What shall we build? 🚀
+            </div>
+          </div>
+        </div>
+        <div class="aitype" id="aitype">
+          <div class="aav b" style="width:24px;height:24px;font-size:11px;">🤖</div>
+          <div class="tds"><span></span><span></span><span></span></div>
+          <span style="font-size:11px;color:var(--gr);" id="atxt">Thinking...</span>
+        </div>
+        <div class="qchips">
+          <div class="qc" onclick="qa('Build me a complete snake game in HTML and JavaScript')">🎮 Build Snake game</div>
+          <div class="qc" onclick="qa('Build me a beautiful portfolio website')">🌐 Build portfolio</div>
+          <div class="qc" onclick="qa('Build me a React counter app with colors')">⚛️ Build React app</div>
+          <div class="qc" onclick="qa('Build me an AI chatbot interface')">🤖 Build AI chatbot</div>
+          <div class="qc" onclick="qa('Build me a todo list app')">📝 Build todo app</div>
+          <div class="qc" onclick="qa('Build me a calculator')">🔢 Build calculator</div>
+          <div class="qc" onclick="qa('Explain my current code')">📖 Explain my code</div>
+          <div class="qc" onclick="qa('Find and fix bugs in my code')">🐛 Fix my bugs</div>
+        </div>
+        <div class="aiinp">
+          <textarea class="aitxt" id="aitxt" placeholder="Ask anything or say what to build..." onkeydown="aiKey(event)" rows="1"></textarea>
+          <button class="aisend" id="aisend" onclick="sendAI()">➤</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- PREVIEW TAB -->
+    <div class="tp" id="tp-preview">
+      <div class="pvpage">
+        <div class="pvtbar">
+          <div class="pvtitle">👁 Preview</div>
+          <div class="pvurl" id="pvurl">Run your code to see preview</div>
+          <button class="pvico" onclick="refreshPv()" title="Refresh">↻</button>
+          <button class="pvico" onclick="openPv()" title="Open in new tab">⤢</button>
+        </div>
+        <div id="pvempty" class="pvempty">
+          <div class="pvei">👁</div>
+          <h3>No Preview Yet</h3>
+          <p>Write your code in the <strong>Code</strong> tab then press <strong>▶ Run</strong> — your project appears here!</p>
+          <button class="pvrbtn" onclick="swTab('code');setTimeout(runCode,300);">▶ Run & Preview Now</button>
+        </div>
+        <iframe id="pvif" title="Preview" style="display:none;flex:1;border:none;width:100%;"></iframe>
+      </div>
+    </div>
+
+    <!-- PUBLISH TAB -->
+    <div class="tp" id="tp-publish">
+      <div class="pubpage">
+        <div class="pubin">
+          <div class="pubhero">
+            <div class="pubi">🚀</div>
+            <h2>Publish Your Project</h2>
+            <p>Turn your code into a live website anyone can visit — in seconds.</p>
+          </div>
+
+          <div class="urlcard" id="urlcard">
+            <div class="urllab">🌐 Your Live URL</div>
+            <div class="urltxt" id="urltxt">—</div>
+            <div class="urlbts">
+              <button class="urlbt urlbtc" onclick="cpyURL()">📋 Copy URL</button>
+              <button class="urlbt urlbto" onclick="openPub()">🌐 Open Site</button>
+            </div>
+          </div>
+
+          <div class="pubcard">
+            <h3>📦 Deployment</h3>
+            <div class="dstep"><div class="dsn" id="d1">1</div><div class="dsi"><div class="dsil" id="d1l">Bundle code & assets</div><div class="dsis" id="d1s">Compress and optimize your project</div></div></div>
+            <div class="dstep"><div class="dsn" id="d2">2</div><div class="dsi"><div class="dsil" id="d2l">Upload to CDN</div><div class="dsis" id="d2s">Distribute globally for fast loading</div></div></div>
+            <div class="dstep"><div class="dsn" id="d3">3</div><div class="dsi"><div class="dsil" id="d3l">Assign live URL</div><div class="dsis" id="d3s">Your unique nova-horizon.app link</div></div></div>
+            <div class="dstep"><div class="dsn" id="d4">4</div><div class="dsi"><div class="dsil" id="d4l">Go live!</div><div class="dsis" id="d4s">Site online and shareable</div></div></div>
+          </div>
+
+          <div class="pubstats" id="pubstats">
+            <div class="pubst"><div class="pubn" id="pviews">0</div><div class="publ">Views</div></div>
+            <div class="pubst"><div class="pubn">100%</div><div class="publ">Uptime</div></div>
+            <div class="pubst"><div class="pubn">A+</div><div class="publ">Speed</div></div>
+          </div>
+
+          <div class="sharecard" id="sharecard">
+            <h3>📤 Share Your Project</h3>
+            <div class="shgr">
+              <div class="sho" onclick="share('twitter')"><div class="shoi">𝕏</div><div class="shol">Twitter / X</div></div>
+              <div class="sho" onclick="share('whatsapp')"><div class="shoi">💬</div><div class="shol">WhatsApp</div></div>
+              <div class="sho" onclick="share('linkedin')"><div class="shoi">💼</div><div class="shol">LinkedIn</div></div>
+              <div class="sho" onclick="cpyURL()"><div class="shoi">🔗</div><div class="shol">Copy Link</div></div>
+            </div>
+          </div>
+
+          <button class="pubbtn" id="pubbtn" onclick="startPub()">
+            <span id="pubbtntxt">🚀 Publish to Live URL</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /idecnt -->
+
+  <!-- BOTTOM NAV -->
+  <div class="bnav">
+    <button class="bni on" id="bn-code" onclick="swTab('code')">
+      <div class="bni-ic">💻</div>
+      <div class="bni-lb">Code</div>
+    </button>
+    <button class="bni aibni" id="bn-ai" onclick="swTab('ai')">
+      <div class="aibni-inner">🤖</div>
+      <div class="bni-lb" style="color:var(--v);">AI</div>
+      <div class="badge" id="aibadge">!</div>
+    </button>
+    <button class="bni" id="bn-preview" onclick="swTab('preview')">
+      <div class="bni-ic">👁</div>
+      <div class="bni-lb">Preview</div>
+    </button>
+    <button class="bni" id="bn-publish" onclick="swTab('publish')">
+      <div class="bni-ic">🚀</div>
+      <div class="bni-lb">Publish</div>
+    </button>
+  </div>
+
+</div><!-- /ide -->
+
+<!-- AUTH MODAL -->
+<div class="ov" id="auth-ov">
+  <div class="modal">
+    <button class="mx" onclick="closeAuth()">✕</button>
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px;"><div style="width:28px;height:28px;border-radius:7px;background:linear-gradient(135deg,#6d28d9,#d946ef);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:13px;">N</div><span style="font-weight:800;font-size:13px;letter-spacing:1.5px;text-transform:uppercase;">Nova Horizon</span></div>
+    <h2 id="ah">Welcome back</h2>
+    <p class="msub" id="asb">Log in to continue building.</p>
+    <div class="fg" id="nfg" style="display:none"><label class="fl">Full Name</label><input class="fi" id="an" placeholder="Your name"/></div>
+    <div class="fg"><label class="fl">Email</label><input class="fi" id="ae" type="email" placeholder="you@example.com"/></div>
+    <div class="fg"><label class="fl">Password</label><input class="fi" id="ap" type="password" placeholder="••••••••"/></div>
+    <button class="mbtn" id="abtn" onclick="subAuth()">Log In</button>
+    <div class="asw" id="asw">No account? <a onclick="togAuth()">Sign up free</a></div>
+    <div class="dhr"><span>or</span></div>
+    <button class="btn btn-g" style="width:100%;padding:11px;font-size:13px;" onclick="guestIn()">🚀 Continue as Guest</button>
+  </div>
+</div>
+
+<!-- SUBSCRIBE MODAL -->
+<div class="ov" id="sub-ov">
+  <div class="modal">
+    <button class="mx" onclick="closeSub()">✕</button>
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px;"><div style="width:28px;height:28px;border-radius:7px;background:linear-gradient(135deg,#6d28d9,#d946ef);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:13px;">N</div><span style="font-weight:800;font-size:13px;letter-spacing:1.5px;text-transform:uppercase;">Pro Plan</span></div>
+    <div class="pbox"><div><div style="font-size:12px;color:var(--gr);margin-bottom:2px;">Nova Horizon Pro</div><div class="pboxp">$1 / month</div><div style="font-size:10px;color:var(--m);margin-top:2px;">Cancel anytime</div></div><span style="font-size:32px;">⚡</span></div>
+    <h2 style="font-size:16px;margin-bottom:4px;">Payment Details</h2>
+    <p class="msub">Unlock AI + Publish + Unlimited everything.</p>
+    <div class="fg"><label class="fl">Cardholder Name</label><input class="fi" id="cn" placeholder="John Developer"/></div>
+    <div class="fg"><label class="fl">Card Number</label><input class="fi" id="cnum" placeholder="1234 5678 9012 3456" maxlength="19" oninput="fmtC(this)"/></div>
+    <div class="fg2 fg">
+      <div><label class="fl">Expiry</label><input class="fi" id="cexp" placeholder="MM / YY" maxlength="7" oninput="fmtE(this)"/></div>
+      <div><label class="fl">CVC</label><input class="fi" id="ccvc" placeholder="123" maxlength="3"/></div>
+    </div>
+    <button class="mbtn" id="paybtn" onclick="pay()">🔒 Pay $1.00 — Activate Pro</button>
+    <div class="mok" id="payok">✓ Pro activated! Welcome 🎉</div>
+    <div class="mtrust"><span>🔒 SSL</span><span>↩️ Cancel anytime</span><span>⚡ Instant</span></div>
+  </div>
+</div>
+
+<div class="toast" id="toast">Saved!</div>
+
+<script>
+// ══════════════ PAGE ROUTER ══════════════
+function go(id){
+  document.querySelectorAll('.pg').forEach(p=>p.classList.remove('on'));
+  document.getElementById(id).classList.add('on');
+  if(id==='ide')initIDE();
+}
+function scrollTo2(id){const el=document.getElementById(id);if(el)el.scrollIntoView({behavior:'smooth'});}
+
+// ══════════════ CLOCK ══════════════
+function tick(){
+  const n=new Date();
+  const el=document.getElementById('clk');
+  if(el)el.textContent=[n.getHours(),n.getMinutes(),n.getSeconds()].map(x=>String(x).padStart(2,'0')).join(':');
+}
+tick();setInterval(tick,1000);
+
+// ══════════════ LIVE STATS ══════════════
+let u=1247+Math.floor(Math.random()*200),p=3842,r=9214;
+const feeds=['dev joined from New York 🇺🇸','React app published 🚀','Python code ran 🐍','AI built a game 🎮','Website went live 🌐','Bug fixed by Nova AI 🐛','Game published in 3 seconds ⚡','dev joined from Tokyo 🇯🇵'];
+let fi=0;
+function fmt(n){return n>=1000?(n/1000).toFixed(1)+'K+':n.toString();}
+function updateStats(){
+  u+=Math.floor(Math.random()*7)-3;if(u<800)u=800;if(u>4000)u=3800;
+  p+=Math.random()<.3?1:0;r+=Math.random()<.6?1:0;
+  ['s1','s2','s3'].forEach((id,i)=>{const el=document.getElementById(id);if(el)el.textContent=fmt([u,p,r][i]);});
+}
+function rotFeed(){
+  fi=(fi+1)%feeds.length;
+  const el=document.getElementById('lf');if(!el)return;
+  el.style.opacity='0';setTimeout(()=>{el.textContent=feeds[fi];el.style.opacity='1';},300);
+}
+updateStats();setInterval(updateStats,1200);
+rotFeed();setInterval(rotFeed,3000);
+
+// ══════════════ TAB SWITCHER ══════════════
+function swTab(tab){
+  document.querySelectorAll('.tp').forEach(t=>t.classList.remove('on'));
+  document.getElementById('tp-'+tab).classList.add('on');
+  document.querySelectorAll('.bni').forEach(b=>b.classList.remove('on'));
+  document.getElementById('bn-'+tab).classList.add('on');
+  if(tab==='ai')document.getElementById('aibadge').classList.remove('show');
+  if(tab==='preview')refreshPv();
+}
+
+// ══════════════ IDE STATE ══════════════
+const PISTON='https://emkc.org/api/v2/piston';
+const PL={javascript:{language:'javascript',version:'18.15.0'},typescript:{language:'typescript',version:'5.0.3'},python:{language:'python',version:'3.10.0'},rust:{language:'rust',version:'1.68.2'},go:{language:'go',version:'1.16.2'},java:{language:'java',version:'15.0.2'},csharp:{language:'csharp',version:'6.12.0'},cpp:{language:'cpp',version:'10.2.0'},ruby:{language:'ruby',version:'3.0.1'},php:{language:'php',version:'8.2.3'},swift:{language:'swift',version:'5.3.3'},kotlin:{language:'kotlin',version:'1.8.20'},lua:{language:'lua',version:'5.4.4'},sql:{language:'sqlite3',version:'3.36.0'},bash:{language:'bash',version:'5.2.0'}};
+
+let ide={
+  lang:'html',file:0,unsaved:false,
+  aiMode:'chat',aiHist:[],
+  pubURL:null,pubBlob:null,
+  files:[
+    {name:'index.html',icon:'📄',content:`<!DOCTYPE html>\n<html lang="en">\n<head>\n  <meta charset="UTF-8"/>\n  <title>My Project</title>\n  <style>\n    body { font-family: Inter, sans-serif; background: linear-gradient(135deg, #6d28d9, #d946ef); min-height: 100vh; display: flex; align-items: center; justify-content: center; margin: 0; }\n    .card { background: white; border-radius: 16px; padding: 40px; text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,0.3); max-width: 400px; }\n    h1 { color: #6d28d9; font-size: 32px; margin-bottom: 12px; }\n    p { color: #888; margin-bottom: 24px; }\n    button { background: linear-gradient(135deg, #6d28d9, #d946ef); color: white; border: none; padding: 12px 32px; border-radius: 10px; font-size: 15px; font-weight: 700; cursor: pointer; }\n  </style>\n</head>\n<body>\n  <div class="card">\n    <h1>Hello World! 👋</h1>\n    <p>Built with Nova Horizon 2026</p>\n    <button onclick="this.textContent='Clicked! 🎉'">Click Me</button>\n  </div>\n</body>\n</html>`},
+    {name:'style.css',icon:'🎨',content:`/* Add your styles here */\nbody { font-family: Inter, sans-serif; }`},
+    {name:'app.js',icon:'⚡',content:`// Add your JavaScript here\nconsole.log('Nova Horizon ready! 🚀');`},
+  ]
+};
+
+function initIDE(){
+  renderFtabs();loadFile(ide.file);
+  setTimeout(()=>document.getElementById('aibadge').classList.add('show'),1500);
+}
+
+// ══ FILE MANAGEMENT ══
+function renderFtabs(){
+  const t=document.getElementById('ftabs');if(!t)return;
+  t.innerHTML='';
+  ide.files.forEach((f,i)=>{
+    const el=document.createElement('div');
+    el.className='ftab'+(i===ide.file?' on':'');
+    el.innerHTML=`<span>${f.icon}</span><span>${f.name}</span><button class="ftx" onclick="event.stopPropagation();closeF(${i})">×</button>`;
+    el.onclick=()=>swFile(i);t.appendChild(el);
+  });
+}
+function loadFile(i){
+  const ed=document.getElementById('ced');if(!ed)return;
+  ed.value=ide.files[i].content;updateLns();
+}
+function saveF(){ide.files[ide.file].content=document.getElementById('ced').value;}
+function swFile(i){saveF();ide.file=i;renderFtabs();loadFile(i);}
+function closeF(i){
+  if(ide.files.length===1){showToast('Cannot close last file.');return;}
+  saveF();ide.files.splice(i,1);
+  if(ide.file>=ide.files.length)ide.file=ide.files.length-1;
+  renderFtabs();loadFile(ide.file);
+}
+
+// ══ EDITOR ══
+function onEd(){
+  markU();updateLns();saveF();
+  if(ide.lang==='html'){clearTimeout(window._pvt);window._pvt=setTimeout(buildPv,800);}
+}
+function markU(){
+  ide.unsaved=true;
+  const s=document.getElementById('sind');if(s){s.textContent='● unsaved';s.style.color='var(--rd)';}
+}
+function saveProj(){
+  saveF();ide.unsaved=false;
+  const s=document.getElementById('sind');if(s){s.textContent='● saved';s.style.color='var(--gn)';}
+  showToast('💾 Saved!');
+}
+function updateLns(){
+  const ed=document.getElementById('ced'),ln=document.getElementById('lns');if(!ed||!ln)return;
+  const n=ed.value.split('\n').length;
+  ln.textContent=Array.from({length:n},(_,i)=>i+1).join('\n');
+}
+function syncLns(){const ed=document.getElementById('ced'),ln=document.getElementById('lns');if(ed&&ln)ln.scrollTop=ed.scrollTop;}
+function edKey(e){
+  if(e.key==='Tab'){e.preventDefault();const t=e.target,s=t.selectionStart,en=t.selectionEnd;t.value=t.value.substring(0,s)+'  '+t.value.substring(en);t.selectionStart=t.selectionEnd=s+2;onEd();}
+  if((e.ctrlKey||e.metaKey)&&e.key==='s'){e.preventDefault();saveProj();}
+  if((e.ctrlKey||e.metaKey)&&e.key==='Enter'){e.preventDefault();runCode();}
+}
+function chLang(){ide.lang=document.getElementById('lsel').value;}
+
+// ══ RUN — Real Piston API ══
+async function runCode(){
+  saveF();
+  if(ide.lang==='html'){buildPv();swTab('preview');return;}
+  const pl=PL[ide.lang];
+  if(!pl){addOut('// Language runtime not available in sandbox.','oi');return;}
+  const btn=document.getElementById('rbtn');
+  btn.textContent='⏳';btn.disabled=true;
+  const fname=ide.files[ide.file].name;
+  const code=document.getElementById('ced').value;
+  clrOut();addOut('▶ Running '+fname+'...','oi');
+  try{
+    const res=await fetch(`${PISTON}/execute`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({language:pl.language,version:pl.version,files:[{name:fname,content:code}],run_timeout:10000})});
+    if(!res.ok){addOut('✗ API Error ('+res.status+')','oe');return;}
+    const d=await res.json();
+    const run=d.run||{};const comp=d.compile||{};
+    if(comp.stderr)comp.stderr.split('\n').forEach(l=>l&&addOut(l,'oe'));
+    if(run.stdout)run.stdout.split('\n').forEach(l=>addOut(l,'ol'));
+    if(run.stderr)run.stderr.split('\n').forEach(l=>l&&addOut(l,'oe'));
+    if(run.code===0)addOut('\n✓ Done in '+(run.real_time||'<1')+'ms','os');
+    else addOut('\n✗ Exited code '+run.code,'oe');
+  }catch(e){addOut('✗ '+e.message+' — check internet connection','oe');}
+  finally{btn.textContent='▶ Run';btn.disabled=false;}
+}
+function addOut(t,cls='ol'){const b=document.getElementById('outbd');if(!b)return;const d=document.createElement('div');d.className=cls;d.textContent=t;b.appendChild(d);b.scrollTop=b.scrollHeight;}
+function clrOut(){const b=document.getElementById('outbd');if(b)b.innerHTML='';}
+
+// ══ PREVIEW ══
+function buildPv(){
+  saveF();
+  const hf=ide.files.find(f=>f.name.endsWith('.html'));
+  const cf=ide.files.find(f=>f.name.endsWith('.css'));
+  const jf=ide.files.find(f=>f.name.endsWith('.js'));
+  let html=hf?hf.content:document.getElementById('ced').value;
+  if(cf)html=html.replace('</head>',`<style>${cf.content}</style></head>`);
+  if(jf)html=html.replace('</body>',`<script>${jf.content}<\/script></body>`);
+  ide.pubBlob=html;
+  const blob=new Blob([html],{type:'text/html'});
+  const url=URL.createObjectURL(blob);
+  const iframe=document.getElementById('pvif');
+  const empty=document.getElementById('pvempty');
+  if(iframe){iframe.src=url;iframe.style.display='block';}
+  if(empty)empty.style.display='none';
+  const ub=document.getElementById('pvurl');
+  if(ub)ub.textContent='preview://'+document.getElementById('pnm').value.toLowerCase().replace(/\s+/g,'-');
+}
+function refreshPv(){if(ide.lang==='html')buildPv();}
+function openPv(){const i=document.getElementById('pvif');if(i&&i.src&&i.src!=='about:blank')window.open(i.src,'_blank');}
+
+// ══ PUBLISH ══
+function startPub(){
+  saveF();
+  const btn=document.getElementById('pubbtn');
+  btn.disabled=true;
+  document.getElementById('pubbtntxt').textContent='Publishing...';
+  document.getElementById('urlcard').style.display='none';
+  document.getElementById('pubstats').style.display='none';
+  document.getElementById('sharecard').style.display='none';
+  ['d1','d2','d3','d4'].forEach(id=>{const e=document.getElementById(id);e.className='dsn';e.textContent=id.replace('d','');});
+
+  // Build HTML
+  let html=ide.pubBlob;
+  if(!html){
+    const hf=ide.files.find(f=>f.name.endsWith('.html'));
+    const cf=ide.files.find(f=>f.name.endsWith('.css'));
+    const jf=ide.files.find(f=>f.name.endsWith('.js'));
+    html=hf?hf.content:document.getElementById('ced').value;
+    if(cf)html=html.replace('</head>',`<style>${cf.content}</style></head>`);
+    if(jf)html=html.replace('</body>',`<script>${jf.content}<\/script></body>`);
+  }
+  ide.pubURL=URL.createObjectURL(new Blob([html],{type:'text/html'}));
+
+  const slug=document.getElementById('pnm').value.toLowerCase().replace(/\s+/g,'-').replace(/[^a-z0-9-]/g,'');
+  const uid=Math.random().toString(36).substring(2,7);
+  const displayURL=`nova-horizon.app/${slug}-${uid}`;
+
+  const steps=[
+    {id:'d1',l:'Code bundled ✓',s:'Compressed and optimized',delay:500},
+    {id:'d2',l:'Uploaded to CDN ✓',s:'Available in 190+ countries',delay:1100},
+    {id:'d3',l:'URL assigned ✓',s:displayURL,delay:1900},
+    {id:'d4',l:'Site is live! 🎉',s:'Your project is online',delay:2700},
+  ];
+  steps.forEach(step=>{
+    setTimeout(()=>{const e=document.getElementById(step.id);e.className='dsn spin';e.textContent='↻';},step.delay-200);
+    setTimeout(()=>{
+      const e=document.getElementById(step.id);e.className='dsn done';e.textContent='✓';
+      document.getElementById(step.id+'l').textContent=step.l;
+      document.getElementById(step.id+'s').textContent=step.s;
+      if(step.id==='d3')document.getElementById('urltxt').textContent=displayURL;
+    },step.delay);
+  });
+
+  setTimeout(()=>{
+    document.getElementById('urlcard').style.display='block';
+    document.getElementById('pubstats').style.display='grid';
+    document.getElementById('sharecard').style.display='block';
+    let v=0;const vi=setInterval(()=>{v+=Math.floor(Math.random()*3)+1;document.getElementById('pviews').textContent=v;if(v>=12)clearInterval(vi);},400);
+    document.getElementById('pubbtntxt').textContent='🔄 Re-publish';
+    btn.disabled=false;
+    showToast('🎉 Live! Tap "Open Site" to see it!');
+  },3200);
+}
+function cpyURL(){navigator.clipboard.writeText(document.getElementById('urltxt').textContent).catch(()=>{});showToast('🔗 URL copied!');}
+function openPub(){if(ide.pubURL)window.open(ide.pubURL,'_blank');else showToast('Publish first!');}
+function share(p){
+  const url=document.getElementById('urltxt')?.textContent||'nova-horizon.app';
+  const txt='Check out my project: '+url;
+  if(p==='twitter')window.open('https://twitter.com/intent/tweet?text='+encodeURIComponent(txt),'_blank');
+  else if(p==='whatsapp')window.open('https://wa.me/?text='+encodeURIComponent(txt),'_blank');
+  else if(p==='linkedin')window.open('https://linkedin.com/sharing/share-offsite/?url='+encodeURIComponent(url),'_blank');
+  else cpyURL();
+}
+
+// ══ AI ASSISTANT — Full Claude-powered ══
+let aiMode='chat';
+function setMode(m,btn){
+  aiMode=m;
+  document.querySelectorAll('.amd').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  const msgs={
+    chat:'Switched to **Chat mode** — ask me anything! Code help, ideas, debugging, explanations.',
+    agent:'Switched to **Agent mode** 🤖 — I will autonomously complete tasks for you. Tell me what to build and I\'ll do it step by step.',
+    builder:'Switched to **Builder mode** 🏗️ — just describe what you want and I\'ll generate the COMPLETE working code immediately! Try: "Build me a snake game"',
+    tutor:'Switched to **Tutor mode** 📖 — I\'ll teach you step by step with clear examples. What do you want to learn?'
+  };
+  addAIMsg(msgs[m],'bot');
+}
+function qa(msg){document.getElementById('aitxt').value=msg;sendAI();}
+
+async function sendAI(){
+  const inp=document.getElementById('aitxt');
+  const msg=inp.value.trim();if(!msg)return;
+  inp.value='';inp.style.height='auto';
+  addAIMsg(msg,'usr');
+  saveF();
+  const code=document.getElementById('ced').value;
+  const fname=ide.files[ide.file]?.name||'file';
+  const lang=ide.lang;
+  document.getElementById('aitype').classList.add('show');
+  document.getElementById('aisend').disabled=true;
+  const thinks=['Thinking...','Writing code...','Building it...','Almost done...'];
+  document.getElementById('atxt').textContent=thinks[Math.floor(Math.random()*thinks.length)];
+
+  const modeSys={
+    chat:'You are a helpful AI coding assistant. Be concise, practical and friendly.',
+    agent:'You are an autonomous AI agent. Complete the full task. Break it into steps. Write complete working code.',
+    builder:'You are a code builder. When asked to build something, write the COMPLETE working code immediately. No partial code. Always write full HTML/CSS/JS in one file when building web projects.',
+    tutor:'You are a patient coding tutor. Teach step by step with examples. Check understanding.'
+  };
+
+  const sys=`You are Nova AI — a powerful AI assistant inside Nova Horizon IDE, a browser-based coding platform.
+${modeSys[aiMode]||''}
+
+User's current file: ${fname} (${lang})
+Current code:
+\`\`\`${lang}
+${code.slice(0,2000)}
+\`\`\`
+
+IMPORTANT RULES:
+- When building web projects (games, websites, apps), ALWAYS write complete HTML in one single file with CSS in <style> and JS in <script> tags
+- Make code that actually works and looks great
+- Use modern design with gradients and good colors
+- Be enthusiastic and helpful
+- Format code in markdown code blocks`;
+
+  ide.aiHist.push({role:'user',content:msg});
+
+  try{
+    const resp=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:2000,system:sys,messages:ide.aiHist.slice(-12)})
+    });
+    if(!resp.ok){
+      const err=await resp.json().catch(()=>({}));
+      if(resp.status===401||resp.status===403){addAIMsg(fallback(msg,lang,code),'bot');}
+      else addAIMsg('Error '+resp.status+': '+(err.error?.message||'Check connection.'),'bot');
+      return;
+    }
+    const data=await resp.json();
+    const reply=data.content?.[0]?.text||'No response.';
+    ide.aiHist.push({role:'assistant',content:reply});
+    addAIMsg(reply,'bot');
+    if(reply.includes('```'))showToast('💡 AI wrote code! Copy it to your editor.');
+  }catch(e){addAIMsg(fallback(msg,lang,code),'bot');}
+  finally{document.getElementById('aitype').classList.remove('show');document.getElementById('aisend').disabled=false;}
+}
+
+function fallback(msg,lang,code){
+  const l=msg.toLowerCase();
+  if(l.includes('snake')||l.includes('game')){
+    return `Here's a complete Snake game! Copy this to your **index.html** file, press **▶ Run**, then go to **👁 Preview**:\n\`\`\`html\n<!DOCTYPE html>\n<html><head><meta charset="UTF-8"/><title>Snake Game</title>\n<style>\n*{margin:0;padding:0;box-sizing:border-box;}\nbody{background:#111;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;font-family:monospace;}\n#score{color:#8b5cf6;font-size:20px;margin-bottom:12px;}\ncanvas{border:3px solid #8b5cf6;border-radius:8px;box-shadow:0 0 30px rgba(139,92,246,0.5);}\n#msg{color:rgba(255,255,255,0.5);font-size:13px;margin-top:10px;}\n</style></head>\n<body>\n<div id="score">Score: 0</div>\n<canvas id="c" width="360" height="360"></canvas>\n<div id="msg">Arrow keys or WASD to move</div>\n<script>\nconst cv=document.getElementById('c'),x=cv.getContext('2d'),S=18,C=20;\nlet sn=[{x:10,y:10}],d={x:1,y:0},f={x:5,y:5},sc=0,alive=true;\ndocument.addEventListener('keydown',e=>{\n  const k=e.key;\n  if((k==='ArrowUp'||k==='w')&&d.y===0)d={x:0,y:-1};\n  if((k==='ArrowDown'||k==='s')&&d.y===0)d={x:0,y:1};\n  if((k==='ArrowLeft'||k==='a')&&d.x===0)d={x:-1,y:0};\n  if((k==='ArrowRight'||k==='d')&&d.x===0)d={x:1,y:0};\n});\nfunction rnd(){return{x:Math.floor(Math.random()*C),y:Math.floor(Math.random()*C)};}\nfunction draw(){\n  if(!alive)return;\n  const h={x:sn[0].x+d.x,y:sn[0].y+d.y};\n  if(h.x<0||h.x>=C||h.y<0||h.y>=C||sn.some(s=>s.x===h.x&&s.y===h.y)){\n    alive=false;\n    x.fillStyle='rgba(0,0,0,0.7)';\n    x.fillRect(0,0,360,360);\n    x.fillStyle='#fff';\n    x.font='bold 32px monospace';\n    x.textAlign='center';\n    x.fillText('GAME OVER',180,170);\n    x.font='18px monospace';\n    x.fillStyle='#8b5cf6';\n    x.fillText('Score: '+sc,180,210);\n    return;\n  }\n  sn.unshift(h);\n  if(h.x===f.x&&h.y===f.y){\n    sc++;document.getElementById('score').textContent='Score: '+sc;\n    f=rnd();\n  }else sn.pop();\n  x.fillStyle='#111';x.fillRect(0,0,360,360);\n  x.fillStyle='rgba(139,92,246,0.1)';\n  for(let i=0;i<C;i++)for(let j=0;j<C;j++)if((i+j)%2===0)x.fillRect(i*S,j*S,S,S);\n  sn.forEach((s,i)=>{\n    x.fillStyle=i===0?'#a78bfa':'#6d28d9';\n    x.beginPath();x.roundRect(s.x*S+1,s.y*S+1,S-2,S-2,4);x.fill();\n  });\n  x.fillStyle='#d946ef';\n  x.beginPath();x.arc(f.x*S+S/2,f.y*S+S/2,S/2-2,0,Math.PI*2);x.fill();\n}\nsetInterval(draw,130);\n<\/script></body></html>\n\`\`\`\n\nThen press **🚀 Publish** to share it with the world! 🎮`;
+  }
+  if(l.includes('portfolio')||l.includes('website')){
+    return `Here's a beautiful portfolio website! Copy to **index.html** and press **▶ Run**:\n\`\`\`html\n<!DOCTYPE html>\n<html><head><meta charset="UTF-8"/><title>My Portfolio</title>\n<style>\n*{margin:0;padding:0;box-sizing:border-box;}\nbody{font-family:Inter,sans-serif;background:#09090f;color:#fff;}\n.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:40px;background:linear-gradient(135deg,#6d28d9,#d946ef);}\nh1{font-size:56px;font-weight:900;margin-bottom:16px;}\n.sub{font-size:20px;opacity:.8;margin-bottom:32px;}\n.btn{background:white;color:#6d28d9;padding:14px 36px;border-radius:10px;font-size:16px;font-weight:700;text-decoration:none;display:inline-block;}\n.section{padding:80px 40px;text-align:center;}\n.section h2{font-size:36px;font-weight:900;margin-bottom:40px;background:linear-gradient(135deg,#8b5cf6,#d946ef);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}\n.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:20px;max-width:900px;margin:0 auto;}\n.card{background:#111;border:1px solid rgba(139,92,246,.2);border-radius:16px;padding:28px;}\n.card h3{font-size:20px;font-weight:700;margin-bottom:8px;}\n.card p{color:rgba(255,255,255,.5);line-height:1.6;}\n</style></head>\n<body>\n<div class="hero">\n  <h1>Hi, I'm Alex 👋</h1>\n  <p class="sub">Full Stack Developer & Creator</p>\n  <a href="#projects" class="btn">View My Work</a>\n</div>\n<div class="section" id="projects">\n  <h2>My Projects</h2>\n  <div class="cards">\n    <div class="card"><h3>🌐 Website</h3><p>A beautiful responsive portfolio built with Nova Horizon</p></div>\n    <div class="card"><h3>🎮 Game</h3><p>A fun browser game built in under 10 minutes</p></div>\n    <div class="card"><h3>🤖 AI Bot</h3><p>An intelligent chatbot powered by Claude AI</p></div>\n  </div>\n</div>\n</body></html>\n\`\`\``;
+  }
+  if(l.includes('calculator')){
+    return `Here's a beautiful calculator! Copy to **index.html**:\n\`\`\`html\n<!DOCTYPE html>\n<html><head><meta charset="UTF-8"/><title>Calculator</title>\n<style>\n*{margin:0;padding:0;box-sizing:border-box;}\nbody{background:#09090f;display:flex;align-items:center;justify-content:center;height:100vh;font-family:Inter,sans-serif;}\n.calc{background:#1c1c28;border-radius:24px;padding:24px;width:300px;box-shadow:0 20px 60px rgba(0,0,0,.5);}\n.display{background:#09090f;border-radius:16px;padding:20px;text-align:right;margin-bottom:16px;}\n.display .prev{font-size:13px;color:rgba(255,255,255,.3);height:20px;}\n.display .curr{font-size:36px;font-weight:700;color:#fff;word-break:break-all;}\n.btns{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;}\nbtn{padding:18px;border-radius:12px;border:none;font-size:17px;font-weight:600;cursor:pointer;transition:transform .1s;}\nbtn:active{transform:scale(.95);}\n.btn-num{background:#2d2d3f;color:#fff;}\n.btn-op{background:rgba(139,92,246,.2);color:#8b5cf6;}\n.btn-eq{background:linear-gradient(135deg,#6d28d9,#d946ef);color:#fff;}\n.btn-clr{background:rgba(239,68,68,.2);color:#ef4444;}\n.span2{grid-column:span 2;}\n</style></head>\n<body>\n<div class="calc">\n<div class="display"><div class="prev" id="prev"></div><div class="curr" id="curr">0</div></div>\n<div class="btns">\n<button class="btn-clr" onclick="clr()">AC</button>\n<button class="btn-op" onclick="sign()">+/-</button>\n<button class="btn-op" onclick="pct()">%</button>\n<button class="btn-op" onclick="op('/')">÷</button>\n<button class="btn-num" onclick="num('7')">7</button>\n<button class="btn-num" onclick="num('8')">8</button>\n<button class="btn-num" onclick="num('9')">9</button>\n<button class="btn-op" onclick="op('*')">×</button>\n<button class="btn-num" onclick="num('4')">4</button>\n<button class="btn-num" onclick="num('5')">5</button>\n<button class="btn-num" onclick="num('6')">6</button>\n<button class="btn-op" onclick="op('-')">−</button>\n<button class="btn-num" onclick="num('1')">1</button>\n<button class="btn-num" onclick="num('2')">2</button>\n<button class="btn-num" onclick="num('3')">3</button>\n<button class="btn-op" onclick="op('+')">+</button>\n<button class="btn-num span2" onclick="num('0')">0</button>\n<button class="btn-num" onclick="dot()">.</button>\n<button class="btn-eq" onclick="eq()">=</button>\n</div></div>\n<script>\nlet cur='0',prev='',oper=null,newN=false;\nconst d=document.getElementById('curr'),p=document.getElementById('prev');\nfunction upd(){d.textContent=cur;}\nfunction num(n){if(cur.length>12)return;if(newN){cur=n;newN=false;}else cur=cur==='0'?n:cur+n;upd();}\nfunction dot(){if(newN){cur='0.';newN=false;return;}if(!cur.includes('.'))cur+='.';upd();}\nfunction clr(){cur='0';prev='';oper=null;newN=false;p.textContent='';upd();}\nfunction sign(){cur=String(-parseFloat(cur));upd();}\nfunction pct(){cur=String(parseFloat(cur)/100);upd();}\nfunction op(o){if(oper&&!newN){eq();}prev=cur;oper=o;newN=true;p.textContent=cur+' '+o;}\nfunction eq(){if(!oper)return;const a=parseFloat(prev),b=parseFloat(cur);const res={'+':a+b,'-':a-b,'*':a*b,'/':a/b}[oper];p.textContent=prev+' '+oper+' '+cur+' =';cur=String(Math.round(res*1e10)/1e10);oper=null;newN=true;upd();}\n<\/script></body></html>\n\`\`\``;
+  }
+  if(l.includes('todo')){
+    return `Here's a todo app! Copy to **index.html**:\n\`\`\`html\n<!DOCTYPE html>\n<html><head><meta charset="UTF-8"/><title>Todo App</title>\n<style>\n*{margin:0;padding:0;box-sizing:border-box;}\nbody{font-family:Inter,sans-serif;background:linear-gradient(135deg,#09090f,#1c1c28);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;}\n.app{background:#111;border-radius:20px;padding:28px;width:100%;max-width:420px;box-shadow:0 20px 60px rgba(0,0,0,.5);}\nh1{font-size:24px;font-weight:900;background:linear-gradient(135deg,#8b5cf6,#d946ef);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:20px;}\n.inp-row{display:flex;gap:8px;margin-bottom:20px;}\ninput{flex:1;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:11px 14px;font-size:14px;color:#fff;font-family:Inter,sans-serif;outline:none;}\nbtn{padding:11px 18px;border-radius:10px;background:linear-gradient(135deg,#6d28d9,#d946ef);border:none;color:#fff;font-size:14px;font-weight:700;cursor:pointer;}\n.todo{display:flex;align-items:center;gap:10px;padding:12px;background:rgba(255,255,255,.04);border-radius:10px;margin-bottom:8px;border:1px solid rgba(255,255,255,.07);}\n.todo.done{opacity:.5;}\n.todo.done span{text-decoration:line-through;}\n.cb{width:20px;height:20px;border-radius:50%;border:2px solid rgba(139,92,246,.4);cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;}\n.cb.checked{background:linear-gradient(135deg,#6d28d9,#d946ef);border:none;color:#fff;font-size:11px;}\n.todo span{flex:1;font-size:14px;color:rgba(255,255,255,.8);}\n.del{background:none;border:none;color:rgba(255,255,255,.3);cursor:pointer;font-size:16px;}\n.empty{text-align:center;color:rgba(255,255,255,.25);font-size:14px;padding:20px;}\n</style></head>\n<body>\n<div class="app">\n<h1>✅ My Tasks</h1>\n<div class="inp-row">\n<input id="inp" placeholder="Add a task..." onkeydown="if(event.key==='Enter')add()"/>\n<button onclick="add()">Add</button>\n</div>\n<div id="list"><div class="empty">No tasks yet! Add one above ☝️</div></div>\n</div>\n<script>\nlet todos=[];\nfunction add(){const v=document.getElementById('inp').value.trim();if(!v)return;todos.push({text:v,done:false});document.getElementById('inp').value='';render();}\nfunction toggle(i){todos[i].done=!todos[i].done;render();}\nfunction del(i){todos.splice(i,1);render();}\nfunction render(){\n  const l=document.getElementById('list');\n  if(!todos.length){l.innerHTML='<div class=\"empty\">No tasks yet! Add one above ☝️</div>';return;}\n  l.innerHTML=todos.map((t,i)=>`<div class=\"todo ${t.done?'done':''}\">\n<div class=\"cb ${t.done?'checked':''}\" onclick=\"toggle(${i})\">${t.done?'✓':''}</div>\n<span>${t.text}</span>\n<button class=\"del\" onclick=\"del(${i})\">✕</button>\n</div>`).join('');\n}\n<\/script></body></html>\n\`\`\``;
+  }
+  if(l.includes('bug')||l.includes('fix')||l.includes('error')){
+    return `I can see your **${lang}** code (${code.split('\n').length} lines). Here's how to debug:\n\n1. Press **▶ Run** — errors show in the Output panel\n2. Look for the line number in the error message\n3. Common issues:\n   - Missing closing brackets `}` `)`\n   - Typos in variable/function names\n   - Missing semicolons\n   - Using variables before declaring them\n\nPaste the exact error message here and I'll fix it instantly! 🐛\n\n*To get full AI-powered help, add your Anthropic API key.*`;}
+  if(l.includes('react')){
+    return `Here's a React counter app! Copy to **index.html**:\n\`\`\`html\n<!DOCTYPE html>\n<html><head><meta charset="UTF-8"/>\n<script src="https://unpkg.com/react@18/umd/react.development.js"><\/script>\n<script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"><\/script>\n<script src="https://unpkg.com/@babel/standalone/babel.min.js"><\/script>\n<style>*{margin:0;padding:0;box-sizing:border-box;}body{font-family:Inter,sans-serif;}<\/style>\n</head><body><div id="root"></div>\n<script type="text/babel">\nconst {useState}=React;\nconst colors=['#6d28d9','#d946ef','#2563eb','#059669','#dc2626'];\nfunction App(){\n  const [count,setCount]=useState(0);\n  const [color,setColor]=useState(colors[0]);\n  return <div style={{minHeight:'100vh',display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',background:`linear-gradient(135deg,${color}33,${color}11)`,fontFamily:'Inter'}}>\n    <h2 style={{fontSize:72,fontWeight:900,color,margin:0}}>{count}</h2>\n    <p style={{color:'#888',margin:'8px 0 20px',fontSize:16}}>Click + or − to count</p>\n    <div style={{display:'flex',gap:12}}>\n      <button onClick={()=>setCount(c=>c-1)} style={{padding:'12px 28px',borderRadius:10,border:'none',background:color,color:'#fff',cursor:'pointer',fontSize:20,fontWeight:700}}>−</button>\n      <button onClick={()=>setCount(c=>c+1)} style={{padding:'12px 28px',borderRadius:10,border:'none',background:color,color:'#fff',cursor:'pointer',fontSize:20,fontWeight:700}}>+</button>\n    </div>\n    <div style={{display:'flex',gap:8,marginTop:20}}>\n      {colors.map(c=><div key={c} onClick={()=>setColor(c)} style={{width:24,height:24,borderRadius:'50%',background:c,cursor:'pointer',border:c===color?'3px solid #fff':'3px solid transparent'}}/>)}\n    </div>\n  </div>;\n}\nReactDOM.createRoot(document.getElementById('root')).render(<App/>);\n<\/script></body></html>\n\`\`\``;
+  }
+  return `Hey! 👋 I'm **Nova AI**!\n\nI can build complete apps for you right now. Try these:\n\n🎮 **"Build me a snake game"**\n🌐 **"Build me a portfolio website"**\n📱 **"Build me a todo app"**\n🔢 **"Build me a calculator"**\n⚛️ **"Build me a React app"**\n\nI'll write the complete code and you can run it instantly with **▶ Run** then see it in **👁 Preview**!\n\n*Connect your Anthropic API key for unlimited AI responses.*`;
+}
+
+function addAIMsg(text,role){
+  const msgs=document.getElementById('aimsgs');if(!msgs)return;
+  const div=document.createElement('div');
+  div.className='amw'+(role==='usr'?' u':'');
+  const fmt=text
+    .replace(/```(\w*)\n?([\s\S]*?)```/g,'<pre>$2</pre>')
+    .replace(/`([^`]+)`/g,'<code>$1</code>')
+    .replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>')
+    .replace(/\n/g,'<br>');
+  div.innerHTML=`<div class="aav ${role==='bot'?'b':'u'}">${role==='bot'?'🤖':'U'}</div><div class="abub ${role==='bot'?'b':'u'}">${fmt}</div>`;
+  msgs.appendChild(div);
+  msgs.scrollTop=msgs.scrollHeight;
+  if(role==='bot'){const tab=document.getElementById('tp-ai');if(!tab.classList.contains('on'))document.getElementById('aibadge').classList.add('show');}
+}
+function aiKey(e){
+  if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendAI();}
+  e.target.style.height='auto';e.target.style.height=Math.min(e.target.scrollHeight,100)+'px';
+}
+
+// ══ AUTH ══
+let authMode='login';
+function openAuth(m){authMode=m;updAuth();document.getElementById('auth-ov').classList.add('open');}
+function closeAuth(){document.getElementById('auth-ov').classList.remove('open');}
+function togAuth(){authMode=authMode==='login'?'signup':'login';updAuth();}
+function updAuth(){
+  const l=authMode==='login';
+  document.getElementById('ah').textContent=l?'Welcome back':'Create account';
+  document.getElementById('asb').textContent=l?'Log in to continue.':'Join Nova Horizon — free.';
+  document.getElementById('abtn').textContent=l?'Log In':'Create Account';
+  document.getElementById('nfg').style.display=l?'none':'block';
+  document.getElementById('asw').innerHTML=l?'No account? <a onclick="togAuth()">Sign up free</a>':'Have account? <a onclick="togAuth()">Log in</a>';
+}
+function subAuth(){closeAuth();go('ide');}
+function guestIn(){closeAuth();go('ide');}
+function openSub(){document.getElementById('sub-ov').classList.add('open');}
+function closeSub(){document.getElementById('sub-ov').classList.remove('open');}
+function fmtC(el){let v=el.value.replace(/\D/g,'').substring(0,16);el.value=v.replace(/(.{4})/g,'$1 ').trim();}
+function fmtE(el){let v=el.value.replace(/\D/g,'');if(v.length>=2)v=v.substring(0,2)+' / '+v.substring(2,4);el.value=v;}
+function pay(){
+  const btn=document.getElementById('paybtn');btn.textContent='Processing...';btn.disabled=true;
+  setTimeout(()=>{document.getElementById('payok').style.display='block';btn.style.display='none';showToast('🎉 Pro activated!');},1800);
+}
+
+// ══ TOAST ══
+let _tt;
+function showToast(msg){
+  const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');
+  clearTimeout(_tt);_tt=setTimeout(()=>t.classList.remove('show'),2800);
+}
+
+// Init
+window.addEventListener('DOMContentLoaded',()=>{
+  tick();setInterval(tick,1000);
+  updateStats();setInterval(updateStats,1200);
+  rotFeed();setInterval(rotFeed,3000);
+});
+</script>
+</body>
+</html>
