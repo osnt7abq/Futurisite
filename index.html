@@ -3,170 +3,137 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CodeMaster // Learn & Build</title>
+    <title>FuturiVideo // AI YouTube Architect</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&family=JetBrains+Mono&display=swap');
-        
-        body {
-            background-color: #020202;
-            color: #ffffff;
-            font-family: 'Plus Jakarta Sans', sans-serif;
-        }
-
+        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;700&family=JetBrains+Mono&display=swap');
+        body { background: #050505; color: #fff; font-family: 'Space Grotesk', sans-serif; }
         .mono { font-family: 'JetBrains Mono', monospace; }
-
-        .glass {
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .gradient-text {
-            background: linear-gradient(135deg, #6366f1 0%, #a855f7 50%, #ec4899 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .project-card {
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .project-card:hover {
-            border-color: #6366f1;
-            background: rgba(99, 102, 241, 0.05);
-        }
-
-        /* Simulate a code editor look */
-        .editor-bg { background-color: #0d1117; }
-        
-        @keyframes pulse-gold {
-            0% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.4); }
-            70% { box-shadow: 0 0 0 10px rgba(212, 175, 55, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0); }
-        }
-        .final-badge { animation: pulse-gold 2s infinite; }
+        .glass { background: rgba(255,255,255,0.02); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.1); }
+        .neon-glow { box-shadow: 0 0 20px rgba(99, 102, 241, 0.2); }
+        .progress-bar { width: 0%; transition: width 0.5s ease; }
     </style>
 </head>
-<body>
+<body class="p-4 md:p-10">
 
-    <!-- Nav with Status & Clock -->
-    <nav class="fixed top-0 w-full z-50 glass border-b border-white/5 px-6 py-4 flex justify-between items-center">
-        <div class="flex items-center space-x-2">
-            <div class="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center font-bold text-xl">C</div>
-            <span class="font-extrabold tracking-tighter text-lg uppercase">CodeMaster</span>
+    <!-- Header -->
+    <nav class="flex justify-between items-center mb-12">
+        <div class="flex items-center space-x-3">
+            <div class="w-10 h-10 bg-indigo-600 rounded-full flex items-center justify-center neon-glow">
+                <i class="fa-solid fa-play text-white"></i>
+            </div>
+            <span class="text-2xl font-bold tracking-tighter uppercase">FuturiVideo</span>
         </div>
-        
-        <div class="hidden md:flex space-x-8 text-xs font-bold uppercase tracking-widest text-gray-400">
-            <a href="#" class="hover:text-white transition">Pathways</a>
-            <a href="#" class="hover:text-white transition">Sandbox</a>
-            <a href="#" class="hover:text-white transition">Community</a>
-        </div>
-
-        <div class="text-right mono text-[10px]">
-            <span class="text-indigo-400">● SYSTEM_ONLINE</span>
-            <div id="clock">00:00:00</div>
-        </div>
+        <div class="mono text-[10px] text-indigo-400 bg-indigo-400/10 px-3 py-1 rounded-full">SERVER: ACTIVE (GPU_NODE_01)</div>
     </nav>
 
-    <!-- Hero Section -->
-    <header class="pt-32 pb-16 px-6 text-center max-w-4xl mx-auto">
-        <h1 class="text-5xl md:text-7xl font-extrabold tracking-tight mb-6">
-            From First Line to <br><span class="gradient-text">Complete Project.</span>
-        </h1>
-        <p class="text-gray-400 text-lg mb-10 leading-relaxed">
-            The all-in-one ecosystem for the next generation of developers. Learn HTML, CSS, and JS through real-time previews.
-        </p>
-        <div class="flex flex-wrap justify-center gap-4">
-            <button class="bg-indigo-600 hover:bg-indigo-500 px-8 py-4 rounded-xl font-bold transition shadow-lg shadow-indigo-500/20">Start Your Journey</button>
-            <button class="glass px-8 py-4 rounded-xl font-bold hover:bg-white/5 transition">Explore Projects</button>
-        </div>
-    </header>
-
-    <!-- Interactive Learning Pathways -->
-    <section class="max-w-7xl mx-auto px-6 py-12">
-        <div class="flex items-center space-x-4 mb-10">
-            <h2 class="text-2xl font-bold">Choose Your Path</h2>
-            <div class="h-[1px] flex-grow bg-white/10"></div>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <!-- Beginner Card -->
-            <div class="glass p-8 rounded-[32px] project-card">
-                <i class="fa-solid fa-seedling text-green-400 text-3xl mb-6"></i>
-                <h3 class="text-xl font-bold mb-2">Beginner Fundamentals</h3>
-                <p class="text-gray-500 text-sm mb-6">Master the building blocks. HTML structure and CSS styling from scratch.</p>
-                <div class="text-xs font-bold text-indigo-400 uppercase tracking-widest">12 Modules</div>
-            </div>
-
-            <!-- Developer Card -->
-            <div class="glass p-8 rounded-[32px] project-card border-indigo-500/30 bg-indigo-500/5">
-                <i class="fa-solid fa-code text-indigo-400 text-3xl mb-6"></i>
-                <h3 class="text-xl font-bold mb-2">Full-Stack Dev</h3>
-                <p class="text-gray-500 text-sm mb-6">Learn JavaScript, APIs, and Backend logic to make your sites come alive.</p>
-                <div class="text-xs font-bold text-indigo-400 uppercase tracking-widest">24 Modules</div>
-            </div>
-
-            <!-- AI Agent Card -->
-            <div class="glass p-8 rounded-[32px] project-card">
-                <i class="fa-solid fa-robot text-purple-400 text-3xl mb-6"></i>
-                <h3 class="text-xl font-bold mb-2">AI Implementation</h3>
-                <p class="text-gray-500 text-sm mb-6">Automate your code with 2026 AI agents and prompt engineering.</p>
-                <div class="text-xs font-bold text-indigo-400 uppercase tracking-widest">8 Modules</div>
-            </div>
-        </div>
-    </section>
-
-    <!-- THE PREVIEW SECTION: "See how it looks" -->
-    <section class="max-w-7xl mx-auto px-6 py-20">
-        <div class="text-center mb-16">
-            <h2 class="text-4xl font-extrabold mb-4 italic">The Live Sandbox</h2>
-            <p class="text-gray-500">Watch your code transform into a masterpiece in real-time.</p>
-        </div>
-
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-px bg-white/10 rounded-[32px] overflow-hidden border border-white/10 shadow-2xl">
-            <!-- Left Side: The Code -->
-            <div class="editor-bg p-8">
-                <div class="flex items-center justify-between mb-6">
-                    <span class="text-xs font-bold text-gray-500 uppercase tracking-widest">Editor // index.html</span>
-                    <div class="flex space-x-2">
-                        <div class="w-2 h-2 rounded-full bg-red-500"></div>
-                        <div class="w-2 h-2 rounded-full bg-yellow-500"></div>
-                        <div class="w-2 h-2 rounded-full bg-green-500"></div>
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        
+        <!-- LEFT: PROMPT PANEL -->
+        <div class="lg:col-span-2 space-y-6">
+            <div class="glass p-8 rounded-[32px]">
+                <h2 class="text-xl font-bold mb-4">YouTube Video Prompt</h2>
+                <textarea id="promptInput" placeholder="Describe the video you want (e.g., 'A 10-minute documentary about the hidden history of Rome')..." class="w-full h-40 bg-white/5 border border-white/10 rounded-2xl p-6 outline-none focus:border-indigo-500 transition text-lg"></textarea>
+                
+                <div class="grid grid-cols-2 gap-4 mt-6">
+                    <div>
+                        <label class="text-[10px] uppercase tracking-widest text-gray-500 block mb-2">Duration</label>
+                        <select class="w-full bg-white/5 border border-white/10 p-3 rounded-xl outline-none">
+                            <option>5 Minutes</option>
+                            <option>10 Minutes</option>
+                            <option>20 Minutes</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="text-[10px] uppercase tracking-widest text-gray-500 block mb-2">AI Voice</label>
+                        <select class="w-full bg-white/5 border border-white/10 p-3 rounded-xl outline-none">
+                            <option>Deep Narrative (Male)</option>
+                            <option>Soft Storyteller (Female)</option>
+                            <option>Futuristic AI</option>
+                        </select>
                     </div>
                 </div>
-                <div class="mono text-sm space-y-2 text-indigo-300">
-                    <p><span class="text-pink-500">&lt;section</span> <span class="text-yellow-400">class</span>=<span class="text-green-400">"hero"</span>&gt;</p>
-                    <p class="pl-4"><span class="text-pink-500">&lt;h1&gt;</span>The Future is Here<span class="text-pink-500">&lt;/h1&gt;</span></p>
-                    <p class="pl-4 text-gray-500">// AI Agent will generate content here</p>
-                    <p class="pl-4"><span class="text-pink-500">&lt;button&gt;</span>Explore Now<span class="text-pink-500">&lt;/button&gt;</span></p>
-                    <p><span class="text-pink-500">&lt;/section&gt;</span></p>
+
+                <button onclick="startGeneration()" class="w-full mt-8 bg-indigo-600 hover:bg-indigo-500 py-5 rounded-2xl font-bold text-xl transition transform active:scale-95 shadow-xl shadow-indigo-500/20">
+                    Generate Full Video
+                </button>
+            </div>
+        </div>
+
+        <!-- RIGHT: AGENT STATUS TERMINAL -->
+        <div class="space-y-6">
+            <div class="glass p-6 rounded-[32px] h-full flex flex-col">
+                <h3 class="mono text-xs text-gray-500 mb-4 uppercase tracking-widest">Agent_Log // System_Output</h3>
+                <div id="terminal" class="mono text-[11px] space-y-2 flex-grow overflow-y-auto text-indigo-300">
+                    <p>> Ready for input...</p>
+                </div>
+                
+                <div class="mt-6 pt-6 border-t border-white/10">
+                    <div class="flex justify-between text-[10px] mb-2 uppercase">
+                        <span>Total Progress</span>
+                        <span id="progressText">0%</span>
+                    </div>
+                    <div class="h-1.5 w-full bg-white/5 rounded-full overflow-hidden">
+                        <div id="progressBar" class="h-full bg-indigo-500 progress-bar"></div>
+                    </div>
                 </div>
             </div>
+        </div>
 
-            <!-- Right Side: The Result -->
-            <div class="bg-white p-8 flex flex-col items-center justify-center text-center relative">
-                <div class="absolute top-4 right-4 final-badge bg-indigo-600 text-white text-[10px] px-3 py-1 rounded-full font-bold uppercase tracking-tighter">Final Look</div>
-                <h1 class="text-4xl font-black text-black mb-4">The Future is Here</h1>
-                <p class="text-gray-500 text-sm mb-6 max-w-[200px]">Experience high-fidelity commerce built in 2026.</p>
-                <button class="bg-black text-white px-8 py-3 rounded-full font-bold text-sm">Explore Now</button>
+    </div>
+
+    <!-- PREVIEW AREA (The "Result") -->
+    <section id="previewArea" class="mt-12 hidden">
+        <div class="glass p-2 rounded-[40px] overflow-hidden aspect-video relative">
+            <div class="absolute inset-0 flex items-center justify-center bg-black/60 z-10" id="videoLoading">
+                <div class="text-center">
+                    <i class="fa-solid fa-circle-notch fa-spin text-4xl text-indigo-500 mb-4"></i>
+                    <p class="mono text-xs uppercase">Rendering 4K Frames...</p>
+                </div>
+            </div>
+            <!-- Video Placeholder -->
+            <div class="w-full h-full bg-[#111] flex items-center justify-center">
+                <i class="fa-solid fa-clapperboard text-8xl opacity-10"></i>
             </div>
         </div>
     </section>
 
-    <!-- Footer -->
-    <footer class="py-20 text-center border-t border-white/5">
-        <p class="text-[10px] tracking-[0.4em] text-gray-600 uppercase">CodeMaster 2026 // Automating Education</p>
-    </footer>
-
     <script>
-        function updateClock() {
-            const now = new Date();
-            document.getElementById('clock').textContent = now.toLocaleTimeString('en-US', { hour12: false });
+        function startGeneration() {
+            const prompt = document.getElementById('promptInput').value;
+            if(!prompt) return alert("Please enter a prompt!");
+
+            document.getElementById('previewArea').classList.remove('hidden');
+            const terminal = document.getElementById('terminal');
+            const bar = document.getElementById('progressBar');
+            const text = document.getElementById('progressText');
+
+            const steps = [
+                { msg: "> Initializing Video Agent...", p: 10 },
+                { msg: "> Writing 10-minute script...", p: 25 },
+                { msg: "> Script complete. Generating ElevenLabs voiceover...", p: 40 },
+                { msg: "> Creating AI Visuals (Runway Gen-3)...", p: 60 },
+                { msg: "> Stitching 450 clips into timeline...", p: 85 },
+                { msg: "> Finalizing 4K Render...", p: 95 },
+                { msg: "> SUCCESS: Video Ready for YouTube.", p: 100 }
+            ];
+
+            let i = 0;
+            const interval = setInterval(() => {
+                if(i < steps.length) {
+                    const p = document.createElement('p');
+                    p.textContent = steps[i].msg;
+                    terminal.appendChild(p);
+                    bar.style.width = steps[i].p + "%";
+                    text.textContent = steps[i].p + "%";
+                    i++;
+                } else {
+                    clearInterval(interval);
+                    document.getElementById('videoLoading').innerHTML = '<button class="bg-white text-black px-8 py-3 rounded-full font-bold uppercase text-xs">Download MP4</button>';
+                }
+            }, 2500);
         }
-        setInterval(updateClock, 1000);
-        updateClock();
     </script>
 </body>
 </html>
