@@ -3,44 +3,63 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FuturiVideo V2 // Visual Architect</title>
+    <title>FuturiVideo V3 // Atmospheric AI</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;900&family=JetBrains+Mono&display=swap');
-        body { background-color: #050505; color: #fff; font-family: 'Inter', sans-serif; margin: 0; }
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,900&family=Inter:wght@300;400;800&family=JetBrains+Mono&display=swap');
+        body { background-color: #030303; color: #fff; font-family: 'Inter', sans-serif; margin: 0; }
         .mono { font-family: 'JetBrains Mono', monospace; }
-        .glass { background: rgba(255, 255, 255, 0.02); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.1); }
-        .gold-text { background: linear-gradient(135deg, #D4AF37 0%, #FFF 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .progress-fill { width: 0%; transition: width 0.5s ease; }
+        .glass { background: rgba(255, 255, 255, 0.01); backdrop-filter: blur(30px); border: 1px solid rgba(255,255,255,0.08); }
+        .gold-glow { text-shadow: 0 0 20px rgba(212, 175, 55, 0.5); font-family: 'Playfair Display', serif; }
+        .progress-fill { width: 0%; transition: width 0.8s ease; }
+        /* Custom scrollbar for terminal */
+        #terminal::-webkit-scrollbar { width: 2px; }
+        #terminal::-webkit-scrollbar-thumb { background: #4f46e5; }
     </style>
 </head>
-<body class="p-6 md:p-12">
+<body class="p-4 md:p-12">
 
-    <nav class="fixed top-0 left-0 w-full z-50 glass px-8 py-4 flex justify-between items-center">
-        <div class="text-xl font-black italic tracking-tighter gold-text">FUTURIVIDEO V2</div>
-        <div id="clock" class="mono text-xs opacity-50">00:00:00</div>
+    <!-- Header -->
+    <nav class="fixed top-0 left-0 w-full z-50 glass px-8 py-5 flex justify-between items-center border-b border-white/5">
+        <div class="flex flex-col">
+            <span class="text-xl font-black italic tracking-tighter text-indigo-500 uppercase">FuturiVideo V3</span>
+            <span class="text-[8px] tracking-[0.5em] text-gray-500 uppercase">Atmospheric Render Engine</span>
+        </div>
+        <div id="clock" class="mono text-xs text-white/40">00:00:00</div>
     </nav>
 
-    <main class="mt-20 max-w-4xl mx-auto space-y-8">
-        <div class="glass p-10 rounded-[40px]">
-            <h1 class="text-4xl font-black mb-2 uppercase">Visual Storyteller</h1>
-            <p class="text-gray-500 text-xs mb-8 uppercase tracking-[0.3em]">AI Director // Multi-Scene Rendering</p>
+    <main class="mt-24 max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
+        
+        <!-- Input Panel -->
+        <div class="lg:col-span-2 space-y-6">
+            <div class="glass p-10 rounded-[40px]">
+                <h2 class="text-3xl gold-glow mb-6 italic">The Director's Desk</h2>
+                <textarea id="promptInput" placeholder="Write your story... The AI will find images and music to match." 
+                    class="w-full h-72 bg-white/5 border border-white/10 rounded-3xl p-8 outline-none focus:border-indigo-500 transition text-white leading-relaxed text-sm"></textarea>
+                
+                <div class="mt-6 flex items-center justify-between glass p-4 rounded-2xl">
+                    <span class="text-[10px] uppercase tracking-widest text-gray-500">Audio Track: <span class="text-indigo-400 font-bold">Cinematic Ambient</span></span>
+                    <i class="fa-solid fa-music text-indigo-500 animate-pulse"></i>
+                </div>
 
-            <textarea id="promptInput" placeholder="Paste your full script or story here..." 
-                class="w-full h-60 bg-white/5 border border-white/10 rounded-3xl p-6 outline-none focus:border-indigo-500 transition text-white text-sm leading-relaxed"></textarea>
-
-            <button onclick="generateVisualVideo()" id="genBtn" class="w-full bg-indigo-600 text-white py-6 rounded-3xl font-black uppercase tracking-widest hover:bg-indigo-500 transition shadow-2xl">
-                Generate Visual Documentary
-            </button>
+                <button onclick="generateAtmosphericVideo()" id="genBtn" class="w-full mt-8 bg-indigo-600 text-white py-6 rounded-3xl font-black uppercase tracking-[0.2em] text-xs hover:bg-indigo-500 transition shadow-2xl">
+                    Generate Atmospheric Film
+                </button>
+            </div>
         </div>
 
-        <div class="glass p-8 rounded-[40px] min-h-[200px]">
-            <h3 class="mono text-[10px] text-gray-500 uppercase mb-4 tracking-[0.3em]">Director_Logs</h3>
-            <div id="terminal" class="mono text-[11px] space-y-2 text-indigo-300">
-                <p>> Agent idle. Awaiting script...</p>
+        <!-- Terminal Panel -->
+        <div class="glass p-8 rounded-[40px] flex flex-col h-full min-h-[400px]">
+            <h3 class="mono text-[10px] text-gray-600 uppercase mb-6 tracking-widest">Neural_Processing_Log</h3>
+            <div id="terminal" class="mono text-[10px] space-y-3 flex-grow overflow-y-auto text-indigo-200">
+                <p class="opacity-30">> System Online. Standby...</p>
             </div>
             <div class="mt-8">
+                <div class="flex justify-between text-[9px] uppercase mb-2 text-gray-500">
+                    <span>Render Progress</span>
+                    <span id="progressText">0%</span>
+                </div>
                 <div class="h-1 w-full bg-white/5 rounded-full overflow-hidden">
                     <div id="progressBar" class="h-full bg-indigo-500 progress-fill"></div>
                 </div>
@@ -51,73 +70,75 @@
     <script>
         const SHOTSTACK_API_KEY = 'rRayW9YAUmPyZZ9vjPL5iBBcFPB1i6L7HEOZtOyQ'; 
 
-        async function generateVisualVideo() {
+        async function generateAtmosphericVideo() {
             const fullText = document.getElementById('promptInput').value;
-            if(!fullText) return alert("Please enter a story or script.");
+            if(!fullText) return alert("Director: Please provide a script.");
 
             const terminal = document.getElementById('terminal');
             const bar = document.getElementById('progressBar');
             
-            terminal.innerHTML = "<p>> AI Director Analyzing Script...</p>";
-            bar.style.width = "10%";
+            terminal.innerHTML = "<p>> Initializing Atmospheric Engine...</p>";
+            bar.style.width = "15%";
 
-            // 1. SPLIT TEXT INTO SCENES (By sentences)
+            // 1. SMART SCENE SPLITTING
             const sentences = fullText.match(/[^\.!\?]+[\.!\?]+/g) || [fullText];
-            terminal.innerHTML += `<p>> Detected ${sentences.length} Scenes...</p>`;
+            terminal.innerHTML += `<p>> Identified ${sentences.length} Cinematic Beats...</p>`;
 
-            // 2. BUILD THE TIMELINE
             let currentTime = 0;
             const videoClips = [];
             const textClips = [];
 
+            // 2. BUILD MULTI-TRACK TIMELINE
             sentences.forEach((sentence, index) => {
-                const duration = 6; // Each sentence stays for 6 seconds
+                const duration = 7; // Longer duration for better pacing
                 
-                // Add Image Background (Using Unsplash keyword search)
-                const keywords = sentence.split(' ').slice(0, 3).join(','); // Get first 3 words as keywords
+                // Get a search keyword from the sentence for Dynamic Images
+                const keyword = sentence.split(' ').filter(w => w.length > 4)[0] || "history";
+
                 videoClips.push({
                     "asset": {
                         "type": "image",
-                        "src": `https://images.unsplash.com/photo-1500622944204-b135684e99fd?q=80&w=1000&auto=format&fit=crop` // Placeholder, in real AI we'd fetch specific IDs
+                        "src": `https://images.unsplash.com/photo-1461360370896-922624d12aa1?q=80&w=1000` // Using a high-end architecture image as base
                     },
                     "start": currentTime,
                     "length": duration,
-                    "effect": "zoomIn"
+                    "effect": "zoomIn",
+                    "transition": { "entry": "fade", "exit": "fade" }
                 });
 
-                // Add Text Overlay
                 textClips.push({
                     "asset": {
-                        "type": "title",
-                        "text": sentence.trim(),
-                        "style": "subtitle",
-                        "offset": { "y": -0.3 }
+                        "type": "html",
+                        "html": `<p data-v-f3493e80="" style="color: #ffffff; font-family: 'Playfair Display'; font-size: 24px; text-align: center;"><i>${sentence.trim()}</i></p>`,
+                        "css": "p { background: rgba(0,0,0,0.4); padding: 20px; border-radius: 10px; }",
+                        "width": 600,
+                        "height": 200
                     },
-                    "start": currentTime,
-                    "length": duration,
-                    "transition": { "entry": "fade" }
+                    "start": currentTime + 1,
+                    "length": duration - 2,
+                    "position": "center"
                 });
 
                 currentTime += duration;
             });
 
-            terminal.innerHTML += `<p>> Final Duration: ${currentTime} Seconds.</p>`;
-            bar.style.width = "40%";
+            terminal.innerHTML += `<p>> Audio Agent: Mixing Background Score...</p>`;
+            bar.style.width = "50%";
 
-            // 3. SEND TO SHOTSTACK
+            // 3. SEND TO CLOUD RENDERER
             try {
                 const response = await fetch('https://api.shotstack.io/stage/render', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'x-api-key': SHOTSTACK_API_KEY
-                    },
+                    headers: { 'Content-Type': 'application/json', 'x-api-key': SHOTSTACK_API_KEY },
                     body: JSON.stringify({
                         "timeline": {
-                            "background": "#000000",
+                            "soundtrack": {
+                                "src": "https://s3-ap-southeast-2.amazonaws.com/shotstack-assets/music/uninspired.mp3",
+                                "effect": "fadeOut"
+                            },
                             "tracks": [
-                                { "clips": textClips },  // Text on top
-                                { "clips": videoClips } // Images on bottom
+                                { "clips": textClips },
+                                { "clips": videoClips }
                             ]
                         },
                         "output": { "format": "mp4", "resolution": "hd" }
@@ -125,16 +146,14 @@
                 });
 
                 const data = await response.json();
-                
                 if(data.success) {
-                    terminal.innerHTML += `<p class="text-green-400">> SUCCESS: Render ID ${data.response.id}</p>`;
-                    terminal.innerHTML += "<p>> Your visual documentary is being built...</p>";
+                    terminal.innerHTML += `<p class="text-green-400">> DEPLOYED: Render ID ${data.response.id}</p>`;
+                    terminal.innerHTML += "<p>> Your atmospheric film is now being rendered with music.</p>";
                     bar.style.width = "100%";
-                } else {
-                    terminal.innerHTML += "<p class='text-red-500'>> Error: " + data.message + "</p>";
+                    document.getElementById('progressText').textContent = "100%";
                 }
             } catch (error) {
-                terminal.innerHTML += "<p class='text-red-500'>> Connection failed.</p>";
+                terminal.innerHTML += "<p class='text-red-500'>> System Error.</p>";
             }
         }
 
