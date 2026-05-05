@@ -3,223 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FuturiVideo // AI YouTube Architect</title>
+    <title>FuturiVideo // Real-Time AI Production</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,900;1,400&family=Inter:wght@300;400;600;800&family=JetBrains+Mono&display=swap');
-        
-        body { 
-            background-color: #050505; 
-            color: #ffffff; 
-            font-family: 'Inter', sans-serif; 
-            margin: 0;
-            overflow-x: hidden;
-        }
-
-        .renaissance-font { font-family: 'Playfair Display', serif; }
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,400;1,900&family=Inter:wght@300;400;800&family=JetBrains+Mono&display=swap');
+        body { background-color: #050505; color: #fff; font-family: 'Inter', sans-serif; margin: 0; }
         .mono { font-family: 'JetBrains Mono', monospace; }
-
-        .glass { 
-            background: rgba(255, 255, 255, 0.02); 
-            backdrop-filter: blur(20px); 
-            border: 1px solid rgba(255, 255, 255, 0.1); 
-        }
-
-        .gold-text {
-            background: linear-gradient(135deg, #D4AF37 0%, #FFF 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .neon-border {
-            border: 1px solid rgba(99, 102, 241, 0.3);
-            box-shadow: 0 0 15px rgba(99, 102, 241, 0.1);
-        }
-
-        /* Loading Bar Animation */
-        .progress-fill {
-            width: 0%;
-            transition: width 0.5s ease;
-        }
-
-        @keyframes pulse {
-            0% { opacity: 1; }
-            50% { opacity: 0.5; }
-            100% { opacity: 1; }
-        }
-        .status-dot {
-            width: 8px;
-            height: 8px;
-            background: #6366f1;
-            border-radius: 50%;
-            display: inline-block;
-            margin-right: 8px;
-            animation: pulse 2s infinite;
-        }
+        .glass { background: rgba(255, 255, 255, 0.02); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.1); }
+        .gold-text { background: linear-gradient(135deg, #D4AF37 0%, #FFF 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
     </style>
 </head>
-<body class="p-4 md:p-10">
+<body class="p-6 md:p-12">
 
-    <!-- NAVIGATION WITH LIVE CLOCK -->
-    <nav class="fixed top-0 left-0 w-full z-50 glass border-b border-white/5 px-6 py-4 flex justify-between items-center">
-        <div class="flex items-center space-x-3">
-            <div class="w-10 h-10 bg-indigo-600 rounded-full flex items-center justify-center shadow-lg shadow-indigo-500/20">
-                <i class="fa-solid fa-play text-white"></i>
-            </div>
-            <div class="flex flex-col">
-                <span class="text-xl font-black tracking-tighter gold-text uppercase italic">FuturiVideo</span>
-                <span class="text-[8px] text-gray-500 uppercase tracking-[0.3em]">Winter Edition '26</span>
-            </div>
-        </div>
-        
-        <div class="text-right">
-            <div class="flex items-center justify-end text-[9px] font-bold tracking-widest text-indigo-400 uppercase">
-                <span class="status-dot"></span> Agent Node Active
-            </div>
-            <div id="clock" class="mono text-lg font-light tracking-tighter text-white">00:00:00</div>
-        </div>
+    <nav class="fixed top-0 left-0 w-full z-50 glass px-8 py-4 flex justify-between items-center">
+        <div class="text-xl font-black gold-text italic tracking-tighter">FUTURIVIDEO.PRO</div>
+        <div id="clock" class="mono text-sm opacity-50">00:00:00</div>
     </nav>
 
-    <!-- MAIN DASHBOARD -->
-    <main class="mt-24 max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
-        
-        <!-- PROMPT INPUT PANEL -->
-        <div class="lg:col-span-2 space-y-6">
-            <div class="glass p-8 rounded-[40px] neon-border">
-                <h1 class="text-3xl renaissance-font font-black mb-6">Create <span class="gold-text">YouTube Masterpieces</span></h1>
-                
-                <label class="text-[10px] uppercase tracking-[0.3em] text-gray-500 mb-3 block">Video Objectives</label>
-                <textarea id="promptInput" placeholder="Enter your prompt (e.g., 'A 10-minute cinematic history of the Renaissance')..." 
-                    class="w-full h-48 bg-white/5 border border-white/10 rounded-3xl p-6 outline-none focus:border-indigo-500 transition text-lg font-light leading-relaxed"></textarea>
-                
-                <div class="grid grid-cols-2 gap-4 mt-6">
-                    <div class="glass p-4 rounded-2xl">
-                        <label class="text-[9px] uppercase tracking-widest text-gray-500 block mb-2">Target Length</label>
-                        <select id="duration" class="w-full bg-transparent text-sm font-bold outline-none cursor-pointer">
-                            <option value="5">5 Minutes</option>
-                            <option value="10" selected>10 Minutes</option>
-                            <option value="20">20 Minutes</option>
-                        </select>
-                    </div>
-                    <div class="glass p-4 rounded-2xl">
-                        <label class="text-[9px] uppercase tracking-widest text-gray-500 block mb-2">Narrative Voice</label>
-                        <select class="w-full bg-transparent text-sm font-bold outline-none cursor-pointer">
-                            <option>ElevenLabs // Deep Narrative</option>
-                            <option>ElevenLabs // Soft Story</option>
-                            <option>System // Neutral AI</option>
-                        </select>
-                    </div>
-                </div>
+    <main class="mt-20 max-w-4xl mx-auto space-y-8">
+        <div class="glass p-10 rounded-[40px] border-indigo-500/20">
+            <h1 class="text-4xl font-black mb-2 uppercase">AI Video Generator</h1>
+            <p class="text-gray-500 text-sm mb-8">Connected to Shotstack v2026 Engine</p>
 
-                <button onclick="startGeneration()" class="w-full mt-8 bg-white text-black py-6 rounded-3xl font-black text-sm uppercase tracking-[0.4em] hover:bg-indigo-500 hover:text-white transition-all transform active:scale-95 shadow-2xl">
-                    Generate Full Video
-                </button>
-            </div>
+            <textarea id="promptInput" placeholder="Describe your YouTube video..." 
+                class="w-full h-40 bg-white/5 border border-white/10 rounded-3xl p-6 outline-none focus:border-indigo-500 transition mb-6"></textarea>
+
+            <button onclick="generateRealVideo()" id="genBtn" class="w-full bg-white text-black py-6 rounded-3xl font-black uppercase tracking-widest hover:bg-indigo-600 hover:text-white transition shadow-2xl">
+                Generate & Render Video
+            </button>
         </div>
 
-        <!-- AGENT TERMINAL -->
-        <div class="space-y-6">
-            <div class="glass p-8 rounded-[40px] h-full flex flex-col min-h-[500px]">
-                <h3 class="mono text-[10px] text-gray-500 mb-6 uppercase tracking-widest border-b border-white/10 pb-4">Agent_Logic_Stream</h3>
-                <div id="terminal" class="mono text-[11px] space-y-3 flex-grow overflow-y-auto text-indigo-300 scrollbar-hide">
-                    <p class="opacity-40">> System initialized. Awaiting user prompt...</p>
-                </div>
-                
-                <div class="mt-8 pt-6 border-t border-white/10">
-                    <div class="flex justify-between text-[9px] mb-3 uppercase tracking-tighter">
-                        <span class="text-gray-500 italic">Total Progress</span>
-                        <span id="progressText" class="font-bold text-white">0%</span>
-                    </div>
-                    <div class="h-1 w-full bg-white/5 rounded-full overflow-hidden">
-                        <div id="progressBar" class="h-full bg-indigo-500 progress-fill"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </main>
-
-    <!-- RESULT / DOWNLOAD AREA -->
-    <section id="previewArea" class="max-w-6xl mx-auto mt-8 hidden">
-        <div class="glass p-4 rounded-[40px] overflow-hidden aspect-video relative flex items-center justify-center bg-[#080808]">
-            <div id="videoLoading" class="text-center z-10">
-                <i class="fa-solid fa-circle-notch fa-spin text-3xl text-indigo-500 mb-4"></i>
-                <p class="mono text-[10px] uppercase tracking-widest opacity-60">Rendering Frames...</p>
-            </div>
-            <i class="fa-solid fa-clapperboard absolute text-9xl opacity-5"></i>
-        </div>
-    </section>
-
-    <footer class="py-20 text-center opacity-20">
-        <p class="text-[10px] tracking-[0.5em] uppercase italic">FuturiVideo © 2026 // Automating the Creative Era</p>
-    </footer>
-
-    <!-- LOGIC SCRIPT -->
-    <script>
-        // 1. Live Clock Logic
-        function updateClock() {
-            const now = new Date();
-            document.getElementById('clock').textContent = now.toLocaleTimeString('en-US', { hour12: false });
-        }
-        setInterval(updateClock, 1000);
-        updateClock();
-
-        // 2. Video Generation Logic
-        function startGeneration() {
-            const prompt = document.getElementById('promptInput').value;
-            const duration = document.getElementById('duration').value;
-            
-            if(!prompt) {
-                alert("The AI Agent requires a prompt to begin rendering.");
-                return;
-            }
-
-            // Reset UI
-            document.getElementById('previewArea').classList.remove('hidden');
-            const terminal = document.getElementById('terminal');
-            const bar = document.getElementById('progressBar');
-            const text = document.getElementById('progressText');
-            terminal.innerHTML = "";
-
-            const logs = [
-                { msg: "> Connecting to GPU Cluster Node_01...", p: 5 },
-                { msg: "> Analyzing prompt architecture...", p: 15 },
-                { msg: "> Drafting " + duration + "-minute high-fidelity script...", p: 25 },
-                { msg: "> Script complete. Initializing Voice Synthesis...", p: 40 },
-                { msg: "> Generating cinematic visuals (Runway Gen-3)...", p: 60 },
-                { msg: "> Compiling timeline & background score...", p: 80 },
-                { msg: "> Final 4K Rendering & Post-Processing...", p: 95 },
-                { msg: "> SUCCESS: Video Masterpiece Created.", p: 100 }
-            ];
-
-            let i = 0;
-            const logInterval = setInterval(() => {
-                if(i < logs.length) {
-                    const p = document.createElement('p');
-                    p.className = "reveal";
-                    p.innerHTML = `<span class="text-white">${logs[i].msg}</span>`;
-                    terminal.appendChild(p);
-                    terminal.scrollTop = terminal.scrollHeight;
-                    
-                    bar.style.width = logs[i].p + "%";
-                    text.textContent = logs[i].p + "%";
-                    i++;
-                } else {
-                    clearInterval(logInterval);
-                    // THIS IS THE FUNCTIONAL DOWNLOAD BUTTON
-                    document.getElementById('videoLoading').innerHTML = `
-                        <div class="space-y-6">
-                            <p class="renaissance-font text-2xl italic">Masterpiece Ready</p>
-                            <a href="https://www.w3schools.com/html/mov_bbb.mp4" 
-                               download="FuturiVideo_Export.mp4" 
-                               class="bg-white text-black px-12 py-5 rounded-full font-black uppercase text-[10px] tracking-[0.3em] shadow-2xl inline-block hover:bg-indigo-500 hover:text-white transition transform active:scale-90">
-                               Download MP4
-                            </a>
-                        </div>
-                    `;
-                }
-            }, 2000);
-        }
-    </script>
-</body>
-</html>
+        <!-- LIVE AGENT STATUS -->
+        <div class="glass p-8 rounded-[40px] min-h-[300px]">
+            <h3 class="mono text-[10px] text-gray-500 uppercase mb-4 tracking-[0.3em]">System
