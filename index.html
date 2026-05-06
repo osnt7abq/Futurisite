@@ -1,133 +1,746 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FuturiVideo V11 // Cloud Accounts</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;800&family=JetBrains+Mono&display=swap');
-        body { background: #050505; color: #fff; font-family: 'Plus Jakarta Sans', sans-serif; margin: 0; }
-        .glass { background: rgba(255,255,255,0.02); backdrop-filter: blur(40px); border: 1px solid rgba(255,255,255,0.1); }
-        .gold-text { background: linear-gradient(135deg, #D4AF37 0%, #FFF 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .auth-hidden { display: none; }
-        .mono { font-family: 'JetBrains Mono', monospace; }
-        input::placeholder { color: rgba(255,255,255,0.2); }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>VidAI — AI YouTube Video Generator</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --gold: #FFD700;
+      --orange: #FF6B00;
+      --red: #FF2D2D;
+      --bg: #080808;
+      --surface: #111111;
+      --border: rgba(255,255,255,0.07);
+      --text: #F0F0F0;
+      --muted: #666;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── NOISE TEXTURE OVERLAY ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.4;
+    }
+
+    /* ── GLOWING BLOBS ── */
+    .blob {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(120px);
+      opacity: 0.07;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .blob-1 { width: 600px; height: 600px; background: var(--gold); top: -200px; right: -200px; }
+    .blob-2 { width: 400px; height: 400px; background: var(--red); bottom: 100px; left: -100px; }
+
+    /* ── NAV ── */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(8,8,8,0.85);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 40px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+    }
+
+    .logo-icon {
+      width: 36px;
+      height: 36px;
+      background: linear-gradient(135deg, var(--gold), var(--orange));
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      color: #000;
+    }
+
+    .logo-text {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 26px;
+      letter-spacing: 2px;
+      background: linear-gradient(90deg, var(--gold), var(--orange));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .nav-badge {
+      background: rgba(255,215,0,0.1);
+      border: 1px solid rgba(255,215,0,0.25);
+      color: var(--gold);
+      border-radius: 20px;
+      padding: 4px 12px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 1px;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      padding: 80px 24px 60px;
+    }
+
+    .hero-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255,215,0,0.08);
+      border: 1px solid rgba(255,215,0,0.2);
+      border-radius: 30px;
+      padding: 6px 16px;
+      font-size: 12px;
+      color: var(--gold);
+      font-weight: 600;
+      letter-spacing: 1px;
+      margin-bottom: 28px;
+      animation: fadeUp 0.6s ease both;
+    }
+
+    .hero h1 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(52px, 10vw, 100px);
+      letter-spacing: 3px;
+      line-height: 0.95;
+      margin-bottom: 24px;
+      animation: fadeUp 0.6s ease 0.1s both;
+    }
+
+    .hero h1 span {
+      background: linear-gradient(135deg, var(--gold) 0%, var(--orange) 50%, var(--red) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero p {
+      max-width: 520px;
+      margin: 0 auto 40px;
+      color: #999;
+      font-size: 16px;
+      line-height: 1.7;
+      animation: fadeUp 0.6s ease 0.2s both;
+    }
+
+    .hero-stats {
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+      animation: fadeUp 0.6s ease 0.3s both;
+      margin-bottom: 48px;
+    }
+
+    .stat { text-align: center; }
+    .stat-num {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 32px;
+      color: var(--gold);
+      letter-spacing: 1px;
+    }
+    .stat-label { font-size: 11px; color: var(--muted); letter-spacing: 1px; margin-top: 2px; }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── MAIN APP CARD ── */
+    .app-wrap {
+      position: relative;
+      z-index: 1;
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 0 20px 80px;
+    }
+
+    .app-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      overflow: hidden;
+      box-shadow: 0 40px 120px rgba(0,0,0,0.6);
+    }
+
+    .app-header {
+      background: rgba(255,255,255,0.02);
+      border-bottom: 1px solid var(--border);
+      padding: 20px 28px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .dot { width: 12px; height: 12px; border-radius: 50%; }
+    .dot-r { background: #FF5F57; }
+    .dot-y { background: #FFBD2E; }
+    .dot-g { background: #28C840; }
+
+    .app-title {
+      margin-left: 12px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .app-body { padding: 36px 32px; }
+
+    /* ── FORM ELEMENTS ── */
+    .field-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      color: var(--muted);
+      margin-bottom: 10px;
+      display: block;
+    }
+
+    textarea, input {
+      width: 100%;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.09);
+      border-radius: 12px;
+      padding: 16px 18px;
+      color: var(--text);
+      font-size: 15px;
+      font-family: 'DM Sans', sans-serif;
+      outline: none;
+      transition: border-color 0.2s;
+      resize: none;
+    }
+
+    textarea:focus, input:focus {
+      border-color: rgba(255,215,0,0.35);
+    }
+
+    textarea::placeholder, input::placeholder { color: #444; }
+
+    .field-group { margin-bottom: 24px; }
+
+    /* ── OPTION BUTTONS ── */
+    .options-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .opt-btn {
+      flex: 1;
+      min-width: 120px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      color: #aaa;
+      border-radius: 10px;
+      padding: 12px 14px;
+      cursor: pointer;
+      font-size: 13px;
+      font-family: 'DM Sans', sans-serif;
+      transition: all 0.18s;
+      text-align: center;
+    }
+
+    .opt-btn:hover { border-color: rgba(255,215,0,0.3); color: #ccc; }
+
+    .opt-btn.active {
+      background: rgba(255,215,0,0.1);
+      border-color: rgba(255,215,0,0.45);
+      color: var(--gold);
+      font-weight: 600;
+    }
+
+    .options-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    /* ── GENERATE BUTTON ── */
+    #generateBtn {
+      width: 100%;
+      background: linear-gradient(135deg, var(--gold) 0%, var(--orange) 60%, var(--red) 100%);
+      border: none;
+      color: #000;
+      border-radius: 14px;
+      padding: 18px;
+      font-size: 16px;
+      font-weight: 800;
+      font-family: 'DM Sans', sans-serif;
+      cursor: pointer;
+      letter-spacing: 0.5px;
+      transition: opacity 0.2s, transform 0.15s;
+      margin-top: 8px;
+    }
+
+    #generateBtn:hover:not(:disabled) { opacity: 0.9; transform: translateY(-1px); }
+    #generateBtn:disabled { background: rgba(255,255,255,0.06); color: #444; cursor: not-allowed; transform: none; }
+
+    /* ── LOADING ── */
+    #loadingSection {
+      display: none;
+      text-align: center;
+      padding: 60px 0;
+    }
+
+    .spinner {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      border: 3px solid rgba(255,215,0,0.15);
+      border-top-color: var(--gold);
+      animation: spin 0.9s linear infinite;
+      margin: 0 auto 24px;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .loading-title { font-size: 18px; font-weight: 700; color: var(--gold); margin-bottom: 8px; }
+    .loading-sub { color: var(--muted); font-size: 14px; }
+
+    .loading-steps {
+      margin-top: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      text-align: left;
+      max-width: 260px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .loading-step {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+      color: #555;
+      font-family: 'JetBrains Mono', monospace;
+      transition: color 0.3s;
+    }
+
+    .loading-step.active { color: var(--gold); }
+    .step-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; flex-shrink: 0; }
+
+    /* ── RESULT ── */
+    #resultSection { display: none; }
+
+    .result-meta {
+      background: rgba(255,215,0,0.05);
+      border: 1px solid rgba(255,215,0,0.15);
+      border-radius: 16px;
+      padding: 24px 26px;
+      margin-bottom: 28px;
+    }
+
+    .result-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 28px;
+      letter-spacing: 1px;
+      color: var(--gold);
+      margin-bottom: 10px;
+      line-height: 1.2;
+    }
+
+    .result-desc {
+      color: #bbb;
+      font-size: 14px;
+      line-height: 1.7;
+      margin-bottom: 16px;
+    }
+
+    .tags-row { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 14px; }
+
+    .tag {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      color: #888;
+      border-radius: 20px;
+      padding: 3px 11px;
+      font-size: 11px;
+    }
+
+    .meta-stats {
+      display: flex;
+      gap: 20px;
+      font-size: 12px;
+      color: var(--muted);
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .hook-box {
+      background: rgba(255,107,0,0.07);
+      border: 1px solid rgba(255,107,0,0.2);
+      border-radius: 12px;
+      padding: 14px 18px;
+      margin-bottom: 28px;
+      font-size: 14px;
+      color: #FF9966;
+      line-height: 1.5;
+    }
+
+    .section-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      color: var(--muted);
+      margin-bottom: 14px;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* ── SCENE CARD ── */
+    .scene-card {
+      background: rgba(255,255,255,0.025);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 14px;
+      padding: 20px 22px 20px 28px;
+      margin-bottom: 14px;
+      position: relative;
+      overflow: hidden;
+      transition: border-color 0.2s;
+    }
+
+    .scene-card:hover { border-color: rgba(255,215,0,0.18); }
+
+    .scene-accent {
+      position: absolute;
+      left: 0; top: 0;
+      width: 4px; height: 100%;
+      background: linear-gradient(180deg, var(--gold), var(--orange));
+      border-radius: 4px 0 0 4px;
+    }
+
+    .scene-top {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+
+    .scene-num {
+      background: linear-gradient(135deg, var(--gold), var(--orange));
+      color: #000;
+      border-radius: 20px;
+      padding: 2px 11px;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .scene-type {
+      background: rgba(255,255,255,0.06);
+      color: #aaa;
+      border-radius: 6px;
+      padding: 2px 9px;
+      font-size: 11px;
+    }
+
+    .scene-dur {
+      color: var(--muted);
+      font-size: 11px;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .scene-visual {
+      color: #FFE58A;
+      font-size: 12px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .scene-narration {
+      color: #ddd;
+      font-size: 14px;
+      line-height: 1.75;
+      font-family: Georgia, serif;
+    }
+
+    .scene-broll {
+      margin-top: 10px;
+      color: #666;
+      font-size: 12px;
+      font-style: italic;
+    }
+
+    /* ── RESULT ACTIONS ── */
+    .result-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 28px;
+      flex-wrap: wrap;
+    }
+
+    .btn-copy {
+      flex: 1;
+      background: linear-gradient(135deg, var(--gold), var(--orange));
+      border: none;
+      color: #000;
+      border-radius: 12px;
+      padding: 14px 20px;
+      font-size: 14px;
+      font-weight: 700;
+      font-family: 'DM Sans', sans-serif;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+
+    .btn-copy:hover { opacity: 0.88; }
+
+    .btn-new {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      color: #aaa;
+      border-radius: 12px;
+      padding: 14px 20px;
+      font-size: 14px;
+      font-family: 'DM Sans', sans-serif;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-new:hover { border-color: rgba(255,255,255,0.2); color: #ccc; }
+
+    /* ── ERROR ── */
+    .error-box {
+      background: rgba(255,45,45,0.07);
+      border: 1px solid rgba(255,45,45,0.25);
+      color: #ff7070;
+      border-radius: 12px;
+      padding: 14px 18px;
+      font-size: 14px;
+      margin-bottom: 20px;
+      display: none;
+    }
+
+    /* ── HOW IT WORKS ── */
+    .how-section {
+      position: relative;
+      z-index: 1;
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 0 20px 80px;
+    }
+
+    .how-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 42px;
+      letter-spacing: 2px;
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 16px;
+    }
+
+    .step-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px 20px;
+      text-align: center;
+    }
+
+    .step-icon {
+      font-size: 32px;
+      margin-bottom: 12px;
+    }
+
+    .step-name {
+      font-weight: 700;
+      font-size: 14px;
+      margin-bottom: 6px;
+    }
+
+    .step-desc {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.6;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      padding: 28px;
+      border-top: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    footer span { color: var(--gold); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 600px) {
+      nav { padding: 0 20px; }
+      .app-body { padding: 24px 20px; }
+      .hero { padding: 50px 20px 40px; }
+      .hero-stats { gap: 24px; }
+      .options-grid { grid-template-columns: 1fr; }
+      .result-actions { flex-direction: column; }
+      .meta-stats { flex-direction: column; gap: 6px; }
+    }
+  </style>
 </head>
-<body class="p-4 md:p-10 pb-40">
+<body>
 
-    <!-- NAVIGATION -->
-    <nav class="fixed top-0 left-0 w-full z-50 glass px-8 py-5 flex justify-between items-center border-b border-white/5">
-        <div class="flex flex-col">
-            <span class="text-xl font-black italic gold-text uppercase">FuturiVideo V11</span>
-            <span class="text-[8px] tracking-[0.4em] opacity-40 uppercase">User Accounts & Credits</span>
-        </div>
-        
-        <div id="authSection">
-            <!-- Login Button (Visible by default) -->
-            <button onclick="handleLogin()" id="loginBtn" class="bg-white text-black px-6 py-2 rounded-full text-[10px] font-black uppercase">Login / Sign Up</button>
-            
-            <!-- User Profile (Hidden until logged in) -->
-            <div id="userProfile" class="auth-hidden flex items-center space-x-4">
-                <div class="text-right">
-                    <div id="userEmail" class="text-[10px] text-gray-500 font-bold mb-1">loading...</div>
-                    <div id="creditDisplay" class="text-indigo-400 font-bold text-[10px] tracking-widest uppercase">0 CREDITS</div>
-                </div>
-                <button onclick="handleLogout()" class="text-white/20 text-[10px] uppercase hover:text-white transition">Logout</button>
-            </div>
-        </div>
-    </nav>
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
 
-    <!-- AUTH MODAL (Magic Link) -->
-    <div id="authModal" class="fixed inset-0 z-[100] hidden flex items-center justify-center p-6 bg-black/95">
-        <div class="glass p-10 rounded-[40px] max-w-sm w-full text-center border-indigo-500/30">
-            <i class="fa-solid fa-bolt-lightning text-indigo-500 text-3xl mb-6"></i>
-            <h2 class="text-2xl font-bold mb-2">Sign In</h2>
-            <p class="text-gray-500 text-xs mb-8">We will email you a magic login link. No password required.</p>
-            
-            <input id="email" type="email" placeholder="Email Address" class="w-full bg-white/5 border border-white/10 p-4 rounded-2xl mb-4 text-white outline-none focus:border-indigo-500">
-            
-            <button onclick="signIn()" class="w-full bg-indigo-600 py-4 rounded-2xl font-black uppercase text-xs tracking-widest shadow-lg shadow-indigo-500/20 hover:bg-indigo-500 transition">Send Magic Link</button>
-            
-            <button onclick="closeAuth()" class="mt-6 text-white/20 text-[10px] uppercase block w-full">Cancel</button>
-        </div>
+  <!-- NAV -->
+  <nav>
+    <a class="nav-logo" href="#">
+      <div class="logo-icon">▶</div>
+      <span class="logo-text">VidAI</span>
+    </a>
+    <span class="nav-badge">BETA · FREE</span>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-pill">✦ Powered by Claude AI</div>
+    <h1>Generate YouTube<br><span>Video Scripts</span><br>In Seconds</h1>
+    <p>Enter a topic. Choose your style. Get a complete scene-by-scene script, narration, visuals, and tags — ready to film.</p>
+    <div class="hero-stats">
+      <div class="stat">
+        <div class="stat-num">1–3</div>
+        <div class="stat-label">MINUTE VIDEOS</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">6–10</div>
+        <div class="stat-label">SCENES GENERATED</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">4</div>
+        <div class="stat-label">VIDEO STYLES</div>
+      </div>
     </div>
+  </section>
 
-    <!-- MAIN APP CONTENT -->
-    <main id="appContent" class="mt-24 max-w-4xl mx-auto opacity-20 pointer-events-none transition-all duration-700 blur-sm">
-        <div class="glass p-10 rounded-[40px] text-center border-indigo-500/10">
-            <h1 class="text-3xl font-bold mb-4 italic">Welcome to the Private Studio</h1>
-            <p class="text-gray-500 text-sm mb-10 max-w-md mx-auto">Purchase credits to unlock the 20-minute AI production pipeline.</p>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div class="glass p-8 rounded-3xl text-left">
-                    <h3 class="font-bold mb-2">Step 1</h3>
-                    <p class="text-xs text-gray-500 mb-6">Unlock your account with production credits.</p>
-                    <button onclick="openStripe()" class="w-full bg-white text-black py-4 rounded-2xl font-black uppercase text-[10px] tracking-widest">Buy 1 Credit ($5.00)</button>
-                </div>
-                
-                <div class="glass p-8 rounded-3xl text-left border-white/5">
-                    <h3 class="font-bold mb-2">Step 2</h3>
-                    <p class="text-xs text-gray-500 mb-6">Start your 20-minute cinematic render.</p>
-                    <button class="w-full bg-white/5 text-white/20 py-4 rounded-2xl font-black uppercase text-[10px] tracking-widest cursor-not-allowed">Generate Film</button>
-                </div>
+  <!-- APP -->
+  <div class="app-wrap">
+    <div class="app-card">
+      <div class="app-header">
+        <div class="dot dot-r"></div>
+        <div class="dot dot-y"></div>
+        <div class="dot dot-g"></div>
+        <span class="app-title">vidai-agent.js — running</span>
+      </div>
+      <div class="app-body">
+
+        <!-- ERROR -->
+        <div class="error-box" id="errorBox">⚠️ Something went wrong. Please check your topic and try again.</div>
+
+        <!-- INPUT FORM -->
+        <div id="inputSection">
+          <div class="field-group">
+            <label class="field-label">YOUR VIDEO TOPIC</label>
+            <textarea id="topicInput" rows="3" placeholder="e.g. 5 habits that changed my life, How black holes work, The truth about intermittent fasting..."></textarea>
+          </div>
+
+          <div class="field-group">
+            <label class="field-label">VIDEO LENGTH</label>
+            <div class="options-row" id="durationGroup">
+              <button class="opt-btn active" data-val="150">1 min (~150 words)</button>
+              <button class="opt-btn active" data-val="300">2 min (~300 words)</button>
+              <button class="opt-btn" data-val="450">3 min (~450 words)</button>
             </div>
+          </div>
+
+          <div class="field-group">
+            <label class="field-label">VIDEO STYLE</label>
+            <div class="options-grid" id="styleGroup">
+              <button class="opt-btn" data-val="educational">🎓 Educational</button>
+              <button class="opt-btn active" data-val="viral">🔥 Viral / Engaging</button>
+              <button class="opt-btn" data-val="storytelling">📖 Storytelling</button>
+              <button class="opt-btn" data-val="tutorial">🛠 Tutorial / How-To</button>
+            </div>
+          </div>
+
+          <button id="generateBtn" disabled onclick="generate()">🎬 Generate Video Script</button>
         </div>
-    </main>
 
-    <script>
-        // --- 1. SUPABASE CONFIG (Paste your keys from supabase.com here) ---
-        const SUPABASE_URL = 'YOUR_SUPABASE_URL';
-        const SUPABASE_KEY = 'YOUR_SUPABASE_ANON_KEY';
-        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        <!-- LOADING -->
+        <div id="loadingSection">
+          <div class="spinner"></div>
+          <div class="loading-title">AI Agent Working...</div>
+          <div class="loading-sub">Building your complete video script</div>
+          <div class="loading-steps">
+            <div class="loading-step active" id="ls1"><span class="step-dot"></span> Writing script structure</div>
+            <div class="loading-step" id="ls2"><span class="step-dot"></span> Crafting scene narration</div>
+            <div class="loading-step" id="ls3"><span class="step-dot"></span> Adding visual directions</div>
+            <div class="loading-step" id="ls4"><span class="step-dot"></span> Generating tags & metadata</div>
+          </div>
+        </div>
 
-        // --- 2. AUTH LOGIC ---
-        async function checkUser() {
-            const { data: { user } } = await supabase.auth.getUser();
-            if (user) {
-                // User is logged in
-                document.getElementById('loginBtn').classList.add('auth-hidden');
-                document.getElementById('userProfile').classList.remove('auth-hidden');
-                document.getElementById('appContent').style.opacity = "1";
-                document.getElementById('appContent').style.pointerEvents = "auto";
-                document.getElementById('appContent').style.filter = "none";
-                document.getElementById('userEmail').innerText = user.email;
-            }
-        }
+        <!-- RESULT -->
+        <div id="resultSection">
+          <div class="result-meta">
+            <div class="result-title" id="rTitle"></div>
+            <div class="result-desc" id="rDesc"></div>
+            <div class="tags-row" id="rTags"></div>
+            <div class="meta-stats" id="rStats"></div>
+          </div>
 
-        function handleLogin() {
-            document.getElementById('authModal').classList.remove('hidden');
-        }
+          <div class="hook-box" id="rHook"></div>
 
-        function closeAuth() {
-            document.getElementById('authModal').classList.add('hidden');
-        }
+          <div class="section-label">SCENE STORYBOARD</div>
+          <div id="rScenes"></div>
 
-        async function signIn() {
-            const email = document.getElementById('email').value;
-            if(!email) return alert("Email required!");
-            const { error } = await supabase.auth.signInWithOtp({ email });
-            if (error) alert(error.message);
-            else alert("Link Sent! Check your email inbox (and spam folder).");
-        }
+          <div class="result-actions">
+            <button class="btn-copy" id="copyBtn" onclick="copyScript()">📋 Copy Full Script</button>
+            <button class="btn-new" onclick="resetApp()">← New Video</button>
+          </div>
+        </div>
 
-        async function handleLogout() {
-            await supabase.auth.signOut();
-            window.location.reload();
-        }
+      </div>
+    </div>
+  </div>
 
-        // --- 3. PAYMENTS LOGIC ---
-        function openStripe() {
-            // --- PASTE YOUR STRIPE LINK BELOW (Between the quotes) ---
-            const STRIPE_LINK = 'https://buy.stripe.com/test_6oU00lajR29b6Xmayd5Rm00';
-            window.open(STRIPE_LINK, '_blank');
-        }
-
-        // Run check on load
-        window.onload = checkUser;
-    </script>
-</body>
-</html>
+  <!-- HOW IT WORKS -->
+  <section class="how-section">
+    <div class="how-title">How It Works</div>
+    <div class="steps-grid">
+      <div class="step-card">
+        <div class="step-icon">✍️</div>
+        <div class="step-name">Enter Topic</div>
+        <div class="step-desc">Type any topic you want to make a YouTube video about</div>
+      </div>
+      <div class="step-card">
+   
