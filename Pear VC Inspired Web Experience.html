@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PEAR | Modern Venture Architecture</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Playfair Display for Classical Renaissance Serif & Inter for Sleek Tech UI -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Inter:wght@200;300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&display=swap" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'pear-blue': '#050A18',
+                        'pear-deep': '#030611',
+                        'pear-royal': '#0A1535',
+                        'pear-gold': '#D4AF37',
+                        'pear-gold-light': '#F3E5AB',
+                        'pear-accent': '#102A6B',
+                        'pear-light': '#F8FAFC'
+                    },
+                    fontFamily: {
+                        serif: ['Playfair Display', 'serif'],
+                        cinzel: ['Cinzel', 'serif'],
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    backgroundImage: {
+                        'grid-pattern': "radial-gradient(rgba(212, 175, 55, 0.12) 1px, transparent 1px)",
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        /* Custom Custom Scrollbar & Utility CSS */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #030611;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #102A6B;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #D4AF37;
+        }
+
+        /* Glassmorphism Styles */
+        .glass-card {
+            background: rgba(10, 21, 53, 0.55);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(212, 175, 55, 0.18);
+        }
+        .glass-card-hover {
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .glass-card-hover:hover {
+            background: rgba(16, 42, 107, 0.75);
+            border-color: rgba(212, 175, 55, 0.45);
+            transform: translateY(-4px);
+            box-shadow: 0 12px 30px -10px rgba(0, 0, 0, 0.5), 0 0 20px rgba(212, 175, 55, 0.15);
+        }
+
+        /* Technical Grid Line Overlay */
+        .tech-grid {
+            background-size: 40px 40px;
+            background-image: 
+                linear-gradient(to right, rgba(212, 175, 55, 0.05) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(212, 175, 55, 0.05) 1px, transparent 1px);
+        }
+
+        /* Canvas Overlay Styles */
+        #interactive-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: auto;
+        }
+
+        /* Custom Cursor Follower */
+        .custom-cursor {
+            pointer-events: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 9999;
+            transition: transform 0.08s ease-out, opacity 0.2s ease;
+        }
+
+        /* Golden Glow Text Effect */
+        .text-glow {
+            text-shadow: 0 0 15px rgba(212, 175, 55, 0.35);
+        }
+
+        /* Animated Curtain Effect */
+        .curtain-panel {
+            transition: transform 1.2s cubic-bezier(0.77, 0, 0.175, 1);
+        }
+        .curtain-open-left {
+            transform: translateX(-100%);
+        }
+        .curtain-open-right {
+            transform: translateX(100%);
+        }
+
+        /* Keyframe Animations */
+        @keyframes pulseSlow {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 0.7; transform: scale(1.05); }
+        }
+        .animate-pulse-slow {
+            animation: pulseSlow 4s infinite ease-in-out;
+        }
+    </style>
+</head>
+<body class="bg-pear-deep text-slate-200 font-sans antialiased selection:bg-pear-gold selection:text-pear-deep overflow-x-hidden relative">
+
+    <!-- Custom Cursor Effect -->
+    <div id="cursor-dot" class="custom-cursor w-3 h-3 bg-pear-gold rounded-full -translate-x-1/2 -translate-y-1/2 shadow-[0_0_10px_#D4AF37]"></div>
+    <div id="cursor-ring" class="custom-cursor w-10 h-10 border border-pear-gold/40 rounded-full -translate-x-1/2 -translate-y-1/2 transition-all duration-300"></div>
+
+    <!-- Navigation Bar -->
+    <header class="fixed top-0 left-0 w-full z-50 px-6 lg:px-12 py-5 transition-all duration-300 backdrop-blur-md bg-pear-deep/80 border-b border-pear-gold/10">
+        <div class="max-w-7xl mx-auto flex items-center justify-between">
+            <a href="#" class="flex items-center gap-3 group">
+                <div class="w-8 h-8 rounded-full border border-pear-gold/40 flex items-center justify-center bg-pear-royal group-hover:border-pear-gold transition-colors">
+                    <i class="fa-solid fa-seedling text-pear-gold text-xs group-hover:rotate-12 transition-transform"></i>
+                </div>
+                <span class="font-cinzel text-xl tracking-[0.2em] text-white font-bold group-hover:text-pear-gold transition-colors">PEAR<span class="text-pear-gold">.VC</span></span>
+            </a>
+
+            <!-- Nav Links -->
+            <nav class="hidden md:flex items-center space-x-8 text-xs tracking-[0.15em] uppercase font-medium">
+                <a href="#philosophy" class="text-slate-300 hover:text-pear-gold transition-colors flex items-center gap-1">
+                    <span class="text-[9px] text-pear-gold font-mono">01.</span> Philosophy
+                </a>
+                <a href="#portfolio" class="text-slate-300 hover:text-pear-gold transition-colors flex items-center gap-1">
+                    <span class="text-[9px] text-pear-gold font-mono">02.</span> Canvas & Guild
+                </a>
+                <a href="#constellation" class="text-slate-300 hover:text-pear-gold transition-colors flex items-center gap-1">
+                    <span class="text-[9px] text-pear-gold font-mono">03.</span> Applications
+                </a>
+            </nav>
+
+            <!-- CTA Button -->
+            <div class="flex items-center gap-4">
+                <button onclick="openModal()" class="relative group overflow-hidden px-5 py-2.5 rounded-full border border-pear-gold/40 bg-pear-royal/40 hover:border-pear-gold transition-all duration-300 text-xs tracking-widest uppercase font-semibold text-pear-gold-light hover:text-white">
+                    <span class="relative z-10 flex items-center gap-2">
+                        <span>Apply for $10M+</span>
+                        <i class="fa-solid fa-arrow-right-long text-[10px] group-hover:translate-x-1 transition-transform"></i>
+                    </span>
+                    <span class="absolute inset-0 bg-gradient-to-r from-pear-gold/20 via-pear-royal to-pear-accent translate-y-full group-hover:translate-y-0 transition-transform duration-300"></span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- SECTION 1: HERO WITH DRAMATIC REVEAL & INTERACTIVE CANVAS -->
+    <section class="relative min-h-screen flex items-center justify-center overflow-hidden tech-grid pt-20">
+        <!-- Interactive Canvas Background -->
+        <canvas id="hero-canvas" class="absolute inset-0 z-0"></canvas>
+
+        <!-- Ambient Lighting Glow -->
+        <div class="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-pear-royal/30 rounded-full blur-[140px] pointer-events-none"></div>
+        <div class="absolute bottom-10 right-10 w-[350px] h-[350px] bg-pear-gold/5 rounded-full blur-[100px] pointer-events-none"></div>
+
+        <!-- Dramatic Curtain Reveal Overlay Container -->
+        <div id="curtain-container" class="absolute inset-0 z-20 pointer-events-none flex">
+            <div id="curtain-left" class="curtain-panel w-1/2 h-full bg-pear-deep border-r border-pear-gold/20 flex items-center justify-end pr-8">
+                <div class="text-right text-pear-gold/30 font-cinzel text-xs tracking-[0.3em] uppercase hidden md:block">Architects of Vision</div>
+            </div>
+            <div id="curtain-right" class="curtain-panel w-1/2 h-full bg-pear-deep border-l border-pear-gold/20 flex items-center justify-start pl-8">
+                <div class="text-left text-pear-gold/30 font-cinzel text-xs tracking-[0.3em] uppercase hidden md:block">EST. MMXIII</div>
+            </div>
+        </div>
+
+        <!-- Main Hero Content -->
+        <div class="relative z-10 max-w-5xl mx-auto px-6 text-center py-20">
+            <!-- Tech Badge -->
+            <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-pear-gold/30 bg-pear-royal/60 backdrop-blur-md mb-8 shadow-inner">
+                <span class="w-2 h-2 rounded-full bg-pear-gold animate-pulse"></span>
+                <span class="text-[11px] font-mono uppercase tracking-[0.2em] text-pear-gold-light">Seed to Sovereign VC</span>
+            </div>
+
+            <!-- Title: Renaissance Typography -->
+            <h1 class="font-serif text-5xl md:text-7xl lg:text-8xl font-normal text-white tracking-tight leading-[1.08] mb-8">
+                Pear makes you <br>
+                <span class="font-cinzel italic font-bold text-transparent bg-clip-text bg-gradient-to-r from-pear-gold-light via-pear-gold to-yellow-600 text-glow">
+                    appear in glory.
+                </span>
+            </h1>
+
+            <!-- Subtitle -->
+            <p class="max-w-2xl mx-auto text-slate-300 text-base md:text-lg font-light leading-relaxed mb-12">
+                Not an agency on the clock. A partner in the upside. We seed world-changing technical pioneers with capital, design mastery, and relentless momentum.
+            </p>
+
+            <!-- Hero Action Controls -->
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-5">
+                <button onclick="triggerCurtain()" class="w-full sm:w-auto px-8 py-4 rounded-full bg-gradient-to-r from-pear-gold to-yellow-600 text-pear-deep font-semibold text-xs tracking-[0.2em] uppercase hover:shadow-[0_0_30px_rgba(212,175,55,0.4)] transition-all duration-300 flex items-center justify-center gap-3">
+                    <i class="fa-solid fa-eye text-sm"></i>
+                    <span>Toggle Curtain Reveal</span>
+                </button>
+                <a href="#philosophy" class="w-full sm:w-auto px-8 py-4 rounded-full border border-pear-gold/30 bg-pear-royal/40 hover:bg-pear-royal/80 text-white font-medium text-xs tracking-[0.2em] uppercase transition-all flex items-center justify-center gap-2">
+                    <span>Explore Thesis</span>
+                    <i class="fa-solid fa-chevron-down text-[10px] text-pear-gold"></i>
+                </a>
+            </div>
+
+            <!-- Grid Tech Stats Bar -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-20 text-left">
+                <div class="p-4 rounded-xl glass-card border border-pear-gold/10">
+                    <div class="text-[10px] font-mono text-pear-gold uppercase tracking-widest mb-1">Fund Size</div>
+                    <div class="text-2xl font-serif font-bold text-white">$1.2B+</div>
+                    <div class="text-[11px] text-slate-400 mt-1">AUM across 4 core funds</div>
+                </div>
+                <div class="p-4 rounded-xl glass-card border border-pear-gold/10">
+                    <div class="text-[10px] font-mono text-pear-gold uppercase tracking-widest mb-1">Portfolio Value</div>
+                    <div class="text-2xl font-serif font-bold text-white">$80B+</div>
+                    <div class="text-[11px] text-slate-400 mt-1">Combined market cap</div>
+                </div>
+                <div class="p-4 rounded-xl glass-card border border-pear-gold/10">
+                    <div class="text-[10px] font-mono text-pear-gold uppercase tracking-widest mb-1">Unicorn Rate</div>
+                    <div class="text-2xl font-serif font-bold text-white">18.4%</div>
+                    <div class="text-[11px] text-slate-400 mt-1">Top-tier VC benchmark</div>
+                </div>
+                <div class="p-4 rounded-xl glass-card border border-pear-gold/10">
+                    <div class="text-[10px] font-mono text-pear-gold uppercase tracking-widest mb-1">First Check</div>
+                    <div class="text-2xl font-serif font-bold text-white">$500K - $5M</div>
+                    <div class="text-[11px] text-slate-400 mt-1">Pre-seed & Seed stage</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 2: CLASSICAL RENAISSANCE ART INTERACTIVE CANVAS OVERLAY -->
+    <section id="philosophy" class="relative py-28 px-6 lg:px-12 bg-pear-royal/20 border-y border-pear-gold/10">
+        <div class="max-w-7xl mx-auto">
+            <!-- Section Header -->
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
+                <div>
+                    <div class="text-xs font-mono uppercase tracking-[0.3em] text-pear-gold mb-3 flex items-center gap-2">
+                        <span class="w-6 h-[1px] bg-pear-gold"></span>
+                        <span>01. The Grafting Process</span>
+                    </div>
+                    <h2 class="font-serif text-4xl md:text-5xl text-white">
+                        We build. We rank. <br>
+                        <span class="italic text-pear-gold font-cinzel">We share in what it earns.</span>
+                    </h2>
+                </div>
+                <p class="text-slate-400 max-w-md text-sm leading-relaxed">
+                    Just as Renaissance masters crafted lasting masterpieces through rigor and vision, we partner with founders to transform raw ideas into category-defining enterprises.
+                </p>
+            </div>
+
+            <!-- Interactive Stage Switcher Cards -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+                <!-- Interactive Stage Cards List -->
+                <div class="lg:col-span-5 space-y-4">
+                    <!-- Stage 1 -->
+                    <div onclick="selectStage(0)" id="stage-card-0" class="stage-card p-6 rounded-2xl glass-card glass-card-hover cursor-pointer border-l-4 border-l-pear-gold">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-xs font-mono text-pear-gold">PHASE 01 // ORIGIN</span>
+                            <i class="fa-solid fa-seedling text-pear-gold"></i>
+                        </div>
+                        <h3 class="font-serif text-xl text-white font-bold mb-2">The Concept & Grafting</h3>
+                        <p class="text-xs text-slate-300 leading-relaxed">
+                            We seed founders before product, market, or traction exist. Hands-on incubation with world-class engineering & design talent.
+                        </p>
+                    </div>
+
+                    <!-- Stage 2 -->
+                    <div onclick="selectStage(1)" id="stage-card-1" class="stage-card p-6 rounded-2xl glass-card glass-card-hover cursor-pointer opacity-70 border-l-4 border-l-transparent">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-xs font-mono text-pear-gold">PHASE 02 // ELEVATION</span>
+                            <i class="fa-solid fa-crown text-pear-gold"></i>
+                        </div>
+                        <h3 class="font-serif text-xl text-white font-bold mb-2">Category Dominance</h3>
+                        <p class="text-xs text-slate-300 leading-relaxed">
+                            Relentless go-to-market architecture, top-tier executive recruiting, and follow-on capital syndication.
+                        </p>
+                    </div>
+
+                    <!-- Stage 3 -->
+                    <div onclick="selectStage(2)" id="stage-card-2" class="stage-card p-6 rounded-2xl glass-card glass-card-hover cursor-pointer opacity-70 border-l-4 border-l-transparent">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-xs font-mono text-pear-gold">PHASE 03 // IMMORTALITY</span>
+                            <i class="fa-solid fa-monument text-pear-gold"></i>
+                        </div>
+                        <h3 class="font-serif text-xl text-white font-bold mb-2">The Sovereign Legacy</h3>
+                        <p class="text-xs text-slate-300 leading-relaxed">
+                            Long-term liquidity alignment. We hold through IPO and beyond, backing generations of tech leadership.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Renaissance Visual Viewport (Classical Art Frame) -->
+                <div class="lg:col-span-7 relative">
+                    <div class="relative w-full aspect-[4/3] rounded-2xl overflow-hidden border border-pear-gold/30 shadow-[0_20px_50px_rgba(0,0,0,0.8)] bg-pear-deep">
+                        <!-- Renaissance Artwork Image Layer -->
+                        <img id="stage-image" 
+                             src="https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?q=80&w=1200&auto=format&fit=crop" 
+                             alt="Renaissance Masterpiece" 
+                             class="w-full h-full object-cover transition-all duration-700 ease-in-out">
+                        
+                        <!-- Golden Grid Overlay Effect -->
+                        <div class="absolute inset-0 bg-gradient-to-t from-pear-deep via-transparent to-transparent opacity-80"></div>
+                        <div class="absolute inset-0 tech-grid opacity-30"></div>
+
+                        <!-- Floating Canvas Interactive Info Label -->
+                        <div class="absolute bottom-6 left-6 right-6 p-6 rounded-xl glass-card border border-pear-gold/20 flex items-center justify-between">
+                            <div>
+                                <div id="stage-art-title" class="font-serif text-lg text-white font-bold">The Renaissance Conception</div>
+                                <div id="stage-art-sub" class="text-xs text-pear-gold font-mono">Artistic Parallels in High Tech</div>
+                            </div>
+                            <div class="w-10 h-10 rounded-full border border-pear-gold/40 flex items-center justify-center bg-pear-royal/80 text-pear-gold">
+                                <i id="stage-art-icon" class="fa-solid fa-compass text-sm"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 3: PORTFOLIO & GUILD (GLASSMORPHISM CARDS GRID) -->
+    <section id="portfolio" class="py-28 px-6 lg:px-12 bg-pear-deep tech-grid relative">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center max-w-2xl mx-auto mb-20">
+                <div class="text-xs font-mono uppercase tracking-[0.3em] text-pear-gold mb-3">02. The Sovereign Guild</div>
+                <h2 class="font-serif text-4xl md:text-5xl text-white">
+                    Backed From <span class="italic font-cinzel text-pear-gold">Genesis</span>
+                </h2>
+                <p class="text-slate-400 text-sm mt-4">
+                    Our guild of portfolio founders spanning AI, biotech, infrastructure, and enterprise software.
+                </p>
+            </div>
+
+            <!-- Portfolio Cards Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Card 1 -->
+                <div class="glass-card glass-card-hover p-8 rounded-2xl relative overflow-hidden group">
+                    <div class="absolute top-0 right-0 w-28 h-28 bg-pear-gold/5 rounded-bl-full pointer-events-none"></div>
+                    <div class="flex items-center justify-between mb-6">
+                        <span class="text-xs font-mono text-pear-gold uppercase tracking-wider">AI & Robotics</span>
+                        <span class="px-2.5 py-1 rounded-full text-[10px] font-mono bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">SEED → IPO</span>
+                    </div>
+                    <h3 class="font-serif text-2xl text-white font-bold mb-2 group-hover:text-pear-gold transition-colors">DoorDash</h3>
+                    <p class="text-xs text-slate-300 leading-relaxed mb-6">
+                        Backing Tony Xu from a Stanford dorm room project into an $80B+ global logistics monarch.
+                    </p>
+                    <div class="pt-4 border-t border-pear-gold/10 flex items-center justify-between text-xs text-slate-400 font-mono">
+                        <span>First Check: $120K</span>
+                        <span class="text-pear-gold">Valuation: $60B+</span>
+                    </div>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="glass-card glass-card-hover p-8 rounded-2xl relative overflow-hidden group">
+                    <div class="absolute top-0 right-0 w-28 h-28 bg-pear-gold/5 rounded-bl-full pointer-events-none"></div>
+                    <div class="flex items-center justify-between mb-6">
+                        <span class="text-xs font-mono text-pear-gold uppercase tracking-wider">Bio & Genomics</span>
+                        <span class="px-2.5 py-1 rounded-full text-[10px] font-mono bg-amber-500/10 text-amber-400 border border-amber-500/20">PRE-SEED</span>
+                    </div>
+                    <h3 class="font-serif text-2xl text-white font-bold mb-2 group-hover:text-pear-gold transition-colors">Guardant Health</h3>
+                    <p class="text-xs text-slate-300 leading-relaxed mb-6">
+                        Liquid biopsy blood test breakthrough revolutionizing early-stage cancer detection.
+                    </p>
+                    <div class="pt-4 border-t border-pear-gold/10 flex items-center justify-between text-xs text-slate-400 font-mono">
+                        <span>First Check: $1.5M</span>
+                        <span class="text-pear-gold">Public (NASDAQ: GH)</span>
+                    </div>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="glass-card glass-card-hover p-8 rounded-2xl relative overflow-hidden group">
+                    <div class="absolute top-0 right-0 w-28 h-28 bg-pear-gold/5 rounded-bl-full pointer-events-none"></div>
+                    <div class="flex items-center justify-between mb-6">
+                        <span class="text-xs font-mono text-pear-gold uppercase tracking-wider">Developer Infrastructure</span>
+                        <span class="px-2.5 py-1 rounded-full text-[10px] font-mono bg-blue-500/10 text-blue-400 border border-blue-500/20">SERIES B</span>
+                    </div>
+                    <h3 class="font-serif text-2xl text-white font-bold mb-2 group-hover:text-pear-gold transition-colors">Supabase</h3>
+                    <p class="text-xs text-slate-300 leading-relaxed mb-6">
+                        The open-source Firebase alternative powering millions of modern web and mobile apps.
+                    </p>
+                    <div class="pt-4 border-t border-pear-gold/10 flex items-center justify-between text-xs text-slate-400 font-mono">
+                        <span>First Check: $2.5M</span>
+                        <span class="text-pear-gold">Valuation: $2B+</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 4: INTERACTIVE CONSTELLATION NODE APPLICATION SUBMISSION -->
+    <section id="constellation" class="py-28 px-6 lg:px-12 bg-pear-royal/30 relative border-t border-pear-gold/20 overflow-hidden">
+        <!-- Celestial Star Background Effect -->
+        <div class="max-w-7xl mx-auto relative z-10">
+            <div class="text-center max-w-2xl mx-auto mb-16">
+                <div class="text-xs font-mono uppercase tracking-[0.3em] text-pear-gold mb-3">03. Celestial Applications</div>
+                <h2 class="font-serif text-4xl md:text-5xl text-white">
+                    Claim Your Node in the <span class="italic font-cinzel text-pear-gold">Constellation</span>
+                </h2>
+                <p class="text-slate-400 text-sm mt-4">
+                    Click any active stellar node on the interactive map below to initiate your funding application.
+                </p>
+            </div>
+
+            <!-- Constellation Canvas Container -->
+            <div class="relative w-full h-[500px] rounded-3xl border border-pear-gold/30 glass-card overflow-hidden shadow-2xl">
+                <canvas id="constellation-canvas" class="w-full h-full cursor-pointer"></canvas>
+                
+                <!-- Floating Node Status Card -->
+                <div class="absolute top-6 left-6 p-4 rounded-xl glass-card border border-pear-gold/20 text-xs font-mono">
+                    <div class="flex items-center gap-2 text-pear-gold mb-1">
+                        <i class="fa-solid fa-satellite animate-spin"></i>
+                        <span>CONSTELLATION STATUS: ACTIVE</span>
+                    </div>
+                    <div class="text-slate-300">Click a glowing node to submit proposal</div>
+                </div>
+
+                <!-- Node Counter Display -->
+                <div class="absolute bottom-6 right-6 p-4 rounded-xl glass-card border border-pear-gold/20 text-right">
+                    <div class="text-2xl font-serif text-white font-bold" id="selected-node-title">Node Alpha</div>
+                    <div class="text-xs text-pear-gold font-mono" id="selected-node-sector">Sector: Artificial Intelligence</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="py-12 px-6 lg:px-12 bg-pear-deep border-t border-pear-gold/10 text-xs font-mono text-slate-500">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
+            <div class="flex items-center gap-3">
+                <span class="font-cinzel text-lg text-white font-bold tracking-widest">PEAR.VC</span>
+                <span>© 2026 Pear Ventures, LLC. All Rights Reserved.</span>
+            </div>
+            <div class="flex items-center space-x-6 text-slate-400">
+                <a href="#" class="hover:text-pear-gold transition-colors">Privacy Policy</a>
+                <a href="#" class="hover:text-pear-gold transition-colors">Terms of Service</a>
+                <a href="#" class="hover:text-pear-gold transition-colors">Twitter / X</a>
+                <a href="#" class="hover:text-pear-gold transition-colors">LinkedIn</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- INTERACTIVE APPLICATION MODAL -->
+    <div id="app-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-xl opacity-0 pointer-events-none transition-all duration-300">
+        <div class="relative w-full max-w-xl p-8 rounded-3xl glass-card border border-pear-gold/40 shadow-[0_25px_60px_rgba(0,0,0,0.9)] transform scale-95 transition-all duration-300" id="modal-box">
+            <!-- Close Button -->
+            <button onclick="closeModal()" class="absolute top-6 right-6 w-10 h-10 rounded-full border border-pear-gold/30 flex items-center justify-center text-slate-400 hover:text-white hover:border-pear-gold transition-all">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <div class="mb-6">
+                <div class="text-xs font-mono text-pear-gold uppercase tracking-widest mb-1">STRICTLY CONFIDENTIAL</div>
+                <h3 class="font-serif text-3xl text-white font-bold">Apply for Seed Capital</h3>
+                <p class="text-xs text-slate-300 mt-2">Submit your thesis to the Pear Investment Committee.</p>
+            </div>
+
+            <!-- Application Form -->
+            <form id="vc-form" onsubmit="handleFormSubmit(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-mono text-slate-300 mb-1">FOUNDER NAME(S)</label>
+                    <input type="text" required placeholder="e.g. Leonardo da Vinci" class="w-full px-4 py-3 rounded-xl bg-pear-deep/80 border border-pear-gold/20 text-white placeholder-slate-600 focus:outline-none focus:border-pear-gold text-xs transition-colors">
+                </div>
+                <div>
+                    <label class="block text-xs font-mono text-slate-300 mb-1">COMPANY / PROJECT NAME</label>
+                    <input type="text" required placeholder="e.g. Flying Machine Inc." class="w-full px-4 py-3 rounded-xl bg-pear-deep/80 border border-pear-gold/20 text-white placeholder-slate-600 focus:outline-none focus:border-pear-gold text-xs transition-colors">
+                </div>
+                <div>
+                    <label class="block text-xs font-mono text-slate-300 mb-1">PITCH DECK URL OR ONE-LINER THESIS</label>
+                    <textarea rows="3" required placeholder="Describe what you are building and why you will win..." class="w-full px-4 py-3 rounded-xl bg-pear-deep/80 border border-pear-gold/20 text-white placeholder-slate-600 focus:outline-none focus:border-pear-gold text-xs transition-colors"></textarea>
+                </div>
+                <button type="submit" class="w-full py-4 rounded-xl bg-gradient-to-r from-pear-gold to-yellow-600 text-pear-deep font-bold text-xs tracking-[0.2em] uppercase hover:shadow-[0_0_25px_rgba(212,175,55,0.4)] transition-all duration-300">
+                    Transmit Application
+                </button>
+            </form>
+
+            <div id="success-msg" class="hidden py-8 text-center space-y-3">
+                <div class="w-12 h-12 rounded-full border border-pear-gold bg-pear-gold/20 text-pear-gold mx-auto flex items-center justify-center text-xl">
+                    <i class="fa-solid fa-check"></i>
+                </div>
+                <h4 class="font-serif text-2xl text-white font-bold">Transmission Received</h4>
+                <p class="text-xs text-slate-300">Our partners will review your constellation submission within 48 hours.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // Custom Cursor Logic
+        const cursorDot = document.getElementById('cursor-dot');
+        const cursorRing = document.getElementById('cursor-ring');
+
+        document.addEventListener('mousemove', (e) => {
+            cursorDot.style.left = `${e.clientX}px`;
+            cursorDot.style.top = `${e.clientY}px`;
+            
+            cursorRing.style.left = `${e.clientX}px`;
+            cursorRing.style.top = `${e.clientY}px`;
+        });
+
+        // Curtain Reveal Trigger Logic
+        let curtainOpen = false;
+        function triggerCurtain() {
+            const left = document.getElementById('curtain-left');
+            const right = document.getElementById('curtain-right');
+            curtainOpen = !curtainOpen;
+            
+            if (curtainOpen) {
+                left.classList.add('curtain-open-left');
+                right.classList.add('curtain-open-right');
+            } else {
+                left.classList.remove('curtain-open-left');
+                right.classList.remove('curtain-open-right');
+            }
+        }
+
+        // Hero Particle Canvas Animation
+        const canvas = document.getElementById('hero-canvas');
+        const ctx = canvas.getContext('2d');
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        const particles = [];
+        const particleCount = 60;
+
+        for (let i = 0; i < particleCount; i++) {
+            particles.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                radius: Math.random() * 2 + 1,
+                vx: (Math.random() - 0.5) * 0.5,
+                vy: (Math.random() - 0.5) * 0.5,
+                alpha: Math.random() * 0.5 + 0.2
+            });
+        }
+
+        function animateHeroCanvas() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Draw floating glowing particles and constellation lines
+            for (let i = 0; i < particles.length; i++) {
+                let p = particles[i];
+                p.x += p.vx;
+                p.y += p.vy;
+
+                if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
+                if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
+
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(212, 175, 55, ${p.alpha})`;
+                ctx.fill();
+
+                // Connect nearby particles with subtle golden lines
+                for (let j = i + 1; j < particles.length; j++) {
+                    let p2 = particles[j];
+                    let dist = Math.hypot(p.x - p2.x, p.y - p2.y);
+                    if (dist < 120) {
+                        ctx.beginPath();
+                        ctx.moveTo(p.x, p.y);
+                        ctx.lineTo(p2.x, p2.y);
+                        ctx.strokeStyle = `rgba(212, 175, 55, ${0.15 * (1 - dist / 120)})`;
+                        ctx.lineWidth = 0.8;
+                        ctx.stroke();
+                    }
+                }
+            }
+            requestAnimationFrame(animateHeroCanvas);
+        }
+        animateHeroCanvas();
+
+        // Stage Switcher Data & Logic
+        const stageData = [
+            {
+                image: "https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?q=80&w=1200&auto=format&fit=crop",
+                title: "The Renaissance Conception",
+                sub: "Artistic Parallels in High Tech",
+                icon: "fa-compass"
+            },
+            {
+                image: "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?q=80&w=1200&auto=format&fit=crop",
+                title: "Mastery & Golden Ratio",
+                sub: "Scaling Engineering & Product",
+                icon: "fa-crown"
+            },
+            {
+                image: "https://images.unsplash.com/photo-1578926375605-eaf7559b1458?q=80&w=1200&auto=format&fit=crop",
+                title: "The Sovereign Legacy",
+                sub: "Enduring Category Monarchs",
+                icon: "fa-monument"
+            }
+        ];
+
+        function selectStage(index) {
+            // Highlight Selected Card
+            document.querySelectorAll('.stage-card').forEach((card, i) => {
+                if (i === index) {
+                    card.classList.remove('opacity-70', 'border-l-transparent');
+                    card.classList.add('border-l-pear-gold');
+                } else {
+                    card.classList.add('opacity-70', 'border-l-transparent');
+                    card.classList.remove('border-l-pear-gold');
+                }
+            });
+
+            // Update Image and Content
+            const img = document.getElementById('stage-image');
+            img.style.opacity = '0';
+            setTimeout(() => {
+                img.src = stageData[index].image;
+                document.getElementById('stage-art-title').innerText = stageData[index].title;
+                document.getElementById('stage-art-sub').innerText = stageData[index].sub;
+                document.getElementById('stage-art-icon').className = `fa-solid ${stageData[index].icon} text-sm`;
+                img.style.opacity = '1';
+            }, 300);
+        }
+
+        // Constellation Interactive Canvas Map
+        const cCanvas = document.getElementById('constellation-canvas');
+        const cCtx = cCanvas.getContext('2d');
+
+        function resizeConstellationCanvas() {
+            cCanvas.width = cCanvas.parentElement.clientWidth;
+            cCanvas.height = cCanvas.parentElement.clientHeight;
+        }
+        resizeConstellationCanvas();
+        window.addEventListener('resize', resizeConstellationCanvas);
+
+        const nodes = [
+            { x: 0.2, y: 0.3, name: "Node Alpha", sector: "Artificial Intelligence", active: true },
+            { x: 0.4, y: 0.6, name: "Node Beta", sector: "Biotech & Genomics", active: true },
+            { x: 0.6, y: 0.2, name: "Node Gamma", sector: "Developer Tools", active: true },
+            { x: 0.8, y: 0.7, name: "Node Delta", sector: "Space Tech", active: true },
+            { x: 0.5, y: 0.4, name: "Node Epsilon", sector: "Fintech Architecture", active: true }
+        ];
+
+        function drawConstellation() {
+            cCtx.clearRect(0, 0, cCanvas.width, cCanvas.height);
+
+            // Connect constellation nodes
+            for (let i = 0; i < nodes.length; i++) {
+                for (let j = i + 1; j < nodes.length; j++) {
+                    let n1 = nodes[i];
+                    let n2 = nodes[j];
+                    cCtx.beginPath();
+                    cCtx.moveTo(n1.x * cCanvas.width, n1.y * cCanvas.height);
+                    cCtx.lineTo(n2.x * cCanvas.width, n2.y * cCanvas.height);
+                    cCtx.strokeStyle = "rgba(212, 175, 55, 0.25)";
+                    cCtx.setLineDash([4, 4]);
+                    cCtx.stroke();
+                    cCtx.setLineDash([]);
+                }
+            }
+
+            // Draw nodes
+            nodes.forEach(node => {
+                let px = node.x * cCanvas.width;
+                let py = node.y * cCanvas.height;
+
+                // Pulsing outer aura
+                cCtx.beginPath();
+                cCtx.arc(px, py, 18, 0, Math.PI * 2);
+                cCtx.fillStyle = "rgba(212, 175, 55, 0.1)";
+                cCtx.fill();
+
+                // Core Node
+                cCtx.beginPath();
+                cCtx.arc(px, py, 6, 0, Math.PI * 2);
+                cCtx.fillStyle = "#D4AF37";
+                cCtx.shadowColor = "#D4AF37";
+                cCtx.shadowBlur = 15;
+                cCtx.fill();
+                cCtx.shadowBlur = 0;
+            });
+
+            requestAnimationFrame(drawConstellation);
+        }
+        drawConstellation();
+
+        // Node click handler to open Modal
+        cCanvas.addEventListener('click', (e) => {
+            const rect = cCanvas.getBoundingClientRect();
+            const clickX = e.clientX - rect.left;
+            const clickY = e.clientY - rect.top;
+
+            nodes.forEach(node => {
+                let px = node.x * cCanvas.width;
+                let py = node.y * cCanvas.height;
+                let dist = Math.hypot(clickX - px, clickY - py);
+
+                if (dist < 30) {
+                    document.getElementById('selected-node-title').innerText = node.name;
+                    document.getElementById('selected-node-sector').innerText = `Sector: ${node.sector}`;
+                    openModal();
+                }
+            });
+        });
+
+        // Modal Controls
+        function openModal() {
+            const modal = document.getElementById('app-modal');
+            const box = document.getElementById('modal-box');
+            modal.classList.remove('opacity-0', 'pointer-events-none');
+            box.classList.remove('scale-95');
+            box.classList.add('scale-100');
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('app-modal');
+            const box = document.getElementById('modal-box');
+            modal.classList.add('opacity-0', 'pointer-events-none');
+            box.classList.remove('scale-100');
+            box.classList.add('scale-95');
+        }
+
+        // Form Submit
+        function handleFormSubmit(e) {
+            e.preventDefault();
+            document.getElementById('vc-form').classList.add('hidden');
+            document.getElementById('success-msg').classList.remove('hidden');
+            setTimeout(() => {
+                closeModal();
+                setTimeout(() => {
+                    document.getElementById('vc-form').classList.remove('hidden');
+                    document.getElementById('success-msg').classList.add('hidden');
+                }, 400);
+            }, 2500);
+        }
+    </script>
+</body>
+</html>
